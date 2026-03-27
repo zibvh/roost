@@ -5,11 +5,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "capacitor:add": "npx cap add android",
+    "capacitor:sync": "npx cap sync",
+    "capacitor:copy": "npx cap copy"
   },
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@capacitor/core": "^5.0.0",
+    "@capacitor/android": "^5.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
