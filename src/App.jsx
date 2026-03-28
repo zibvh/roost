@@ -422,13 +422,157 @@ const QB = [
   {id:"e053",s:"Use of English",y:2017,t:"Lexis and Structure",d:"Medium",q:"TACITURN means",o:{"A":"Talkative","B":"Reserved, saying little","C":"Aggressive","D":"Happy"},a:"B",e:"Taciturn: reserved, not inclined to talk. Opposite of loquacious."},
   {id:"e054",s:"Use of English",y:2018,t:"Novel - Sweet Sixteen",d:"Medium",q:"Sweet Sixteen was written by",o:{"A":"Khadija Jalli","B":"Sarah Ladipo Manyika","C":"Bolaji Abdullahi","D":"Chukwuemeka Ike"},a:"C",e:"Bolaji Abdullahi wrote Sweet Sixteen. Prescribed for JAMB 2019-2020."},
   {id:"e055",s:"Use of English",y:2019,t:"Oral English",d:"Medium",q:"INCESSANT means",o:{"A":"Occasional","B":"Continuous and uninterrupted","C":"Silent","D":"Brief"},a:"B",e:"Incessant: never stopping — incessant rain, incessant noise."},
-  {id:"e056",s:"Use of English",y:2020,t:"Lexis and Structure",d:"Hard",q:"Which sentence has correct pronoun-antecedent agreement?",o:{"A":"Everyone must bring their own lunch","B":"Everyone must bring his or her own lunch","C":"Everyone must bring its own lunch","D":"Everyone must bring our own lunch"},a:"B",e:"Everyone is singular. His or her is the formal correct agreement. (Their is increasingly accepted but B is more traditionally correct for JAMB)."},
+  {id:"e056",s:"Use of English",y:2020,t:"Lexis and Structure",d:"Hard",q:"Which sentence has correct pronoun-antecedent agreement?",o:{"A":"Everyone must bring their own lunch","B":"Everyone must bring his or her own lunch","C":"Everyone must bring its own lunch","D":"Everyone must bring our own lunch"},a:"B",e:"Everyone is singular. His or her is the formal correct agreement."},
   {id:"e057",s:"Use of English",y:2021,t:"Comprehension",d:"Medium",q:"Onomatopoeia refers to words that",o:{"A":"Rhyme with each other","B":"Sound like what they describe","C":"Are repeated for emphasis","D":"Have opposite meanings"},a:"B",e:"Onomatopoeia: buzz, hiss, crash, bang — words that imitate the sounds they describe."},
   {id:"e058",s:"Use of English",y:2022,t:"Oral English",d:"Medium",q:"Word with stress on second syllable from this group is",o:{"A":"TAble","B":"PENcil","C":"beCAUSE","D":"REcord (noun)"},a:"C",e:"Because: be-CAUSE — stress on second syllable."},
   {id:"e059",s:"Use of English",y:2023,t:"Lexis and Structure",d:"Medium",q:"PERNICIOUS means",o:{"A":"Beneficial","B":"Harmful in a subtle or gradual way","C":"Obvious","D":"Temporary"},a:"B",e:"Pernicious: having a harmful effect, especially in a gradual and subtle way."},
   {id:"e060",s:"Use of English",y:2024,t:"Novel - The Lekki Headmaster",d:"Medium",q:"Author of The Lekki Headmaster is",o:{"A":"Wole Soyinka","B":"Khadija Jalli","C":"Rotimi Ogundimu","D":"Chinua Achebe"},a:"C",e:"Rotimi Ogundimu wrote The Lekki Headmaster — prescribed for JAMB 2025."}
 ];
 
+// ============ FIXED STORAGE FUNCTIONS - Uses localStorage that works in APK ============
+const initStore = () => ({ 
+  sessions: [], 
+  subjectStats: {}, 
+  topicStats: {}, 
+  totalQ: 0, 
+  totalC: 0 
+});
+
+async function loadStore() {
+  try {
+    const saved = localStorage.getItem(SKEY);
+    console.log('Loading data from localStorage:', saved ? 'found' : 'none');
+    return saved ? JSON.parse(saved) : initStore();
+  } catch (e) {
+    console.error('Load store error:', e);
+    return initStore();
+  }
+}
+
+async function saveStore(s) {
+  try {
+    localStorage.setItem(SKEY, JSON.stringify(s));
+    console.log('Data saved to localStorage successfully');
+    return true;
+  } catch (e) {
+    console.error('Save store error:', e);
+    return false;
+  }
+}
+
+async function clearStore() {
+  try {
+    localStorage.removeItem(SKEY);
+    console.log('Data cleared from localStorage');
+  } catch (e) {
+    console.error('Clear store error:', e);
+  }
+}
+// ============ END FIXED STORAGE FUNCTIONS ============
+
+async function recordSession(session){
+  const s = await loadStore();
+  s.sessions = [session, ...s.sessions].slice(0, 100);
+  s.totalQ += session.total;
+  s.totalC += session.correct;
+  
+  Object.entries(session.bySubject).forEach(([sub, d]) => {
+    if(!s.subjectStats[sub]) s.subjectStats[sub] = { correct: 0, total: 0, sessions: 0 };
+    s.subjectStats[sub].correct += d.correct;
+    s.subjectStats[sub].total += d.total;
+    s.subjectStats[sub].sessions += 1;
+  });
+  
+  session.topicResults.forEach(t => {
+    const k = `${t.subject}__${t.topic}`;
+    if(!s.topicStats[k]) s.topicStats[k] = { subject: t.subject, topic: t.topic, correct: 0, total: 0 };
+    s.topicStats[k].correct += t.correct;
+    s.topicStats[k].total += t.total;
+  });
+  
+  await saveStore(s);
+  return s;
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+function fmtDate(iso){ try{return new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});}catch{return "";} }
+function fmtSecs(s){ const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60; if(h>0)return`${h}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; return`${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; }
+function getScore(correct,total){ return total?Math.round((correct/total)*(MARKS_TOTAL)):0; }
+function pct(correct,total){ return total?Math.round(correct/total*100):0; }
+
+function buildExam(mode,cfg,bank){
+  if(mode==="subject"){
+    let p=[...bank].filter(q=>q.s===cfg.subject);
+    if(cfg.year) p=p.filter(q=>q.y===cfg.year);
+    return shuffle(p).slice(0,cfg.count||40);
+  }
+  if(mode==="year"){
+    return shuffle([...bank].filter(q=>q.y===cfg.year)).slice(0,cfg.count||40);
+  }
+  if(mode==="mixed"){
+    const order=["Use of English","Biology","Chemistry","Physics"];
+    const perSubject=cfg.perSubject||10;
+    let out=[];
+    order.forEach(sub=>{ out=out.concat(shuffle([...bank].filter(q=>q.s===sub)).slice(0,perSubject)); });
+    return out;
+  }
+  return [];
+}
+
+function topicResults(questions,answers){
+  const m={};
+  questions.forEach(q=>{
+    const k=`${q.s}__${q.t}`;
+    if(!m[k]) m[k]={subject:q.s,topic:q.t,correct:0,total:0};
+    m[k].total++;
+    if(answers[q.id]===q.a) m[k].correct++;
+  });
+  return Object.values(m);
+}
+
+// ─── TIMER ────────────────────────────────────────────────────────────────────
+function useTimer(init,onExpire){
+  const [secs,setSecs]=useState(init);
+  const runRef=useRef(false);
+  const ivRef=useRef(null);
+  const stop=useCallback(()=>{ runRef.current=false; clearInterval(ivRef.current); },[]);
+  const start=useCallback(()=>{
+    if(runRef.current) return;
+    runRef.current=true;
+    ivRef.current=setInterval(()=>{
+      setSecs(s=>{ if(s<=1){stop();onExpire?.();return 0;} return s-1; });
+    },1000);
+  },[stop]);
+  const reset=useCallback(t=>{ stop(); setSecs(t); },[stop]);
+  useEffect(()=>()=>clearInterval(ivRef.current),[]);
+  return {secs,start,stop,reset,fmt:()=>fmtSecs(secs)};
+}
+
+// ─── ICONS ────────────────────────────────────────────────────────────────────
+function I({n,sz=20,c="currentColor"}){
+  const p={width:sz,height:sz,viewBox:"0 0 24 24",fill:"none",stroke:c,strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"};
+  const icons={
+    home:<svg {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>,
+    book:<svg {...p}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
+    chart:<svg {...p}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+    cog:<svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
+    clock:<svg {...p}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+    flag:<svg {...p}><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>,
+    check:<svg {...p} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>,
+    x:<svg {...p} strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+    left:<svg {...p} strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
+    right:<svg {...p} strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+    grid:<svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
+    play:<svg width={sz} height={sz} viewBox="0 0 24 24" fill={c}><polygon points="5 3 19 12 5 21 5 3"/></svg>,
+    trash:<svg {...p}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>,
+    sun:<svg {...p}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
+    moon:<svg {...p}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+  };
+  return icons[n]||null;
+}
+
+// ─── CSS ──────────────────────────────────────────────────────────────────
 const CSS = `@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{--bg:#07090e;--bg2:#0d1018;--bg3:#141820;--bg4:#1b2030;--blue:#4f7cff;--purple:#8b5cf6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--text:#edf0ff;--text2:#8b93b8;--text3:#4a5270;--border:#1b2030;--border2:#262f48;--r:16px;--r2:12px;--r3:8px;--font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;--cbg:var(--bg2);--cbo:var(--border2);--obg:var(--bg2);--obo:var(--border2);--navbg:rgba(7,9,14,0.97);}
@@ -510,112 +654,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 @keyframes landIn{from{opacity:0;transform:scale(.94) translateY(24px)}to{opacity:1;transform:none}}
 .land{animation:landIn .5s cubic-bezier(.22,1,.36,1) forwards;}
 ::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:999px;}` // (keep your full CSS string)
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:999px;}`;
 
-// ─── STORAGE ──────────────────────────────────────────────────────────────────
-const initStore = () => ({ sessions:[], subjectStats:{}, topicStats:{}, totalQ:0, totalC:0 });
-async function loadStore(){
-  try{ const r=await window.storage.get(SKEY); return r?JSON.parse(r.value):initStore(); }catch{ return initStore(); }
-}
-async function saveStore(s){ try{ await window.storage.set(SKEY,JSON.stringify(s)); }catch{} }
-async function clearStore(){ try{ await window.storage.delete(SKEY); }catch{} }
-async function recordSession(session){
-  const s=await loadStore();
-  s.sessions=[session,...s.sessions].slice(0,100);
-  s.totalQ+=session.total; s.totalC+=session.correct;
-  Object.entries(session.bySubject).forEach(([sub,d])=>{
-    if(!s.subjectStats[sub]) s.subjectStats[sub]={correct:0,total:0,sessions:0};
-    s.subjectStats[sub].correct+=d.correct;
-    s.subjectStats[sub].total+=d.total;
-    s.subjectStats[sub].sessions+=1;
-  });
-  session.topicResults.forEach(t=>{
-    const k=`${t.subject}__${t.topic}`;
-    if(!s.topicStats[k]) s.topicStats[k]={subject:t.subject,topic:t.topic,correct:0,total:0};
-    s.topicStats[k].correct+=t.correct; s.topicStats[k].total+=t.total;
-  });
-  await saveStore(s); return s;
-}
-
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
-function fmtDate(iso){ try{return new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});}catch{return "";} }
-function fmtSecs(s){ const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60; if(h>0)return`${h}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; return`${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; }
-function getScore(correct,total){ return total?Math.round((correct/total)*(MARKS_TOTAL)):0; }
-function pct(correct,total){ return total?Math.round(correct/total*100):0; }
-
-function buildExam(mode,cfg,bank){
-  if(mode==="subject"){
-    let p=[...bank].filter(q=>q.s===cfg.subject);
-    if(cfg.year) p=p.filter(q=>q.y===cfg.year);
-    return shuffle(p).slice(0,cfg.count||40);
-  }
-  if(mode==="year"){
-    return shuffle([...bank].filter(q=>q.y===cfg.year)).slice(0,cfg.count||40);
-  }
-  if(mode==="mixed"){
-    const order=["Use of English","Biology","Chemistry","Physics"];
-    const perSubject=cfg.perSubject||10;
-    let out=[];
-    order.forEach(sub=>{ out=out.concat(shuffle([...bank].filter(q=>q.s===sub)).slice(0,perSubject)); });
-    return out;
-  }
-  return [];
-}
-
-function topicResults(questions,answers){
-  const m={};
-  questions.forEach(q=>{
-    const k=`${q.s}__${q.t}`;
-    if(!m[k]) m[k]={subject:q.s,topic:q.t,correct:0,total:0};
-    m[k].total++;
-    if(answers[q.id]===q.a) m[k].correct++;
-  });
-  return Object.values(m);
-}
-
-// ─── TIMER ────────────────────────────────────────────────────────────────────
-function useTimer(init,onExpire){
-  const [secs,setSecs]=useState(init);
-  const runRef=useRef(false);
-  const ivRef=useRef(null);
-  const stop=useCallback(()=>{ runRef.current=false; clearInterval(ivRef.current); },[]);
-  const start=useCallback(()=>{
-    if(runRef.current) return;
-    runRef.current=true;
-    ivRef.current=setInterval(()=>{
-      setSecs(s=>{ if(s<=1){stop();onExpire?.();return 0;} return s-1; });
-    },1000);
-  },[stop]);
-  const reset=useCallback(t=>{ stop(); setSecs(t); },[stop]);
-  useEffect(()=>()=>clearInterval(ivRef.current),[]);
-  return {secs,start,stop,reset,fmt:()=>fmtSecs(secs)};
-}
-
-// ─── ICONS ────────────────────────────────────────────────────────────────────
-function I({n,sz=20,c="currentColor"}){
-  const p={width:sz,height:sz,viewBox:"0 0 24 24",fill:"none",stroke:c,strokeWidth:"2",strokeLinecap:"round",strokeLinejoin:"round"};
-  const icons={
-    home:<svg {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>,
-    book:<svg {...p}><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>,
-    chart:<svg {...p}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
-    cog:<svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-    clock:<svg {...p}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-    flag:<svg {...p}><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>,
-    check:<svg {...p} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>,
-    x:<svg {...p} strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-    left:<svg {...p} strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
-    right:<svg {...p} strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
-    grid:<svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>,
-    play:<svg width={sz} height={sz} viewBox="0 0 24 24" fill={c}><polygon points="5 3 19 12 5 21 5 3"/></svg>,
-    trash:<svg {...p}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>,
-    sun:<svg {...p}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
-    moon:<svg {...p}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
-  };
-  return icons[n]||null;
-}
-
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+// ─── MAIN APP COMPONENT ─────────────────────────────────────────────────────────────────
 export default function App(){
   const [screen,setScreen]=useState("landing");
   const [tab,setTab]=useState("home");
@@ -632,7 +673,13 @@ export default function App(){
   const [showPal,setShowPal]=useState(false);
   const [showConf,setShowConf]=useState(false);
 
-  useEffect(()=>{loadStore().then(s=>{setStore(s);setLoaded(true);});},[]);
+  useEffect(()=>{
+    loadStore().then(s=>{
+      setStore(s);
+      setLoaded(true);
+      console.log('App loaded with', s.sessions.length, 'sessions saved');
+    });
+  },[]);
 
   const timer=useTimer(UTME_SECS,()=>doSubmit(true));
 
@@ -708,7 +755,7 @@ export default function App(){
   );
 }
 
-// ─── LANDING ──────────────────────────────────────────────────────────────────
+// ─── LANDING SCREEN ──────────────────────────────────────────────────────────────────
 function Landing({onStart,dark}){
   return(
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
@@ -733,7 +780,7 @@ function Landing({onStart,dark}){
           {TAGLINE}
         </div>
         <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:8,marginBottom:48,maxWidth:320}}>
-          {["2010 – 2025","4 Subjects","410 Questions","Offline","Timed Exam","Full Review"].map(f=>(
+          {["2010 – 2025","4 Subjects","400+ Questions","Offline","Timed Exam","Full Review"].map(f=>(
             <span key={f} style={{padding:"6px 14px",borderRadius:999,background:"var(--bg3)",
               border:"1px solid var(--border2)",fontSize:12,fontWeight:700,color:"var(--text2)"}}>
               {f}
@@ -759,7 +806,7 @@ function Landing({onStart,dark}){
   );
 }
 
-// ─── HOME ─────────────────────────────────────────────────────────────────────
+// ─── HOME SCREEN ──────────────────────────────────────────────────────────────────
 function HomeScreen({store,loaded,setScreen}){
   const sessions=store?.sessions||[];
   const totalQ=store?.totalQ||0;
@@ -877,16 +924,12 @@ function HomeScreen({store,loaded,setScreen}){
   );
 }
 
-// ─── SELECT ───────────────────────────────────────────────────────────────────
+// ─── SELECT SCREEN ──────────────────────────────────────────────────────────────────
 function SelectScreen({startExam,setScreen}){
   const [mode,setMode]=useState("subject");
   const [subject,setSubject]=useState("Biology");
   const [year,setYear]=useState(null);
   const [count,setCount]=useState(40);
-
-  const avail=mode==="subject"?QB.filter(q=>q.s===subject&&(!year||q.y===year)).length
-    :mode==="year"?QB.filter(q=>q.y===year).length
-    :Object.keys(MIXED).reduce((a,s)=>a+Math.min(QB.filter(q=>q.s===s).length,MIXED[s]/6),0);
 
   return(
     <div className="screen fade">
@@ -947,10 +990,6 @@ function SelectScreen({startExam,setScreen}){
         </>
       )}
 
-      <div style={{fontSize:12,color:"var(--text3)",marginBottom:14}}>
-        {QB.filter(q=>mode==="subject"?(q.s===subject&&(!year||q.y===year)):mode==="year"?q.y===year:true).length} questions available
-      </div>
-
       <button className="btn bp" onClick={()=>startExam({mode,subject,year,count,perSubject:10})}>
         <I n="play" sz={15} c="#fff"/> Begin Exam
       </button>
@@ -958,11 +997,12 @@ function SelectScreen({startExam,setScreen}){
   );
 }
 
-// ─── EXAM ─────────────────────────────────────────────────────────────────────
+// ─── EXAM SCREEN ──────────────────────────────────────────────────────────────────
 function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,setFlagged,
   revealed,setRevealed,examCfg,timer,showPal,setShowPal,showConf,setShowConf,onSubmit}){
   const q=questions[currentQ];
-  const chosen=answers[q.id]; const isRev=revealed[q.id];
+  const chosen=answers[q.id]; 
+  const isRev=revealed[q.id];
   const isPrac=examCfg.mode!=="full";
   const tc=timer.secs<300?"tc":timer.secs<600?"tw":"";
   const answered=Object.keys(answers).length;
@@ -1136,7 +1176,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
   );
 }
 
-// ─── RESULT ───────────────────────────────────────────────────────────────────
+// ─── RESULT SCREEN ──────────────────────────────────────────────────────────────────
 function ResultScreen({stats,questions,answers,setScreen}){
   const {correct,total,bySubject,score,pct:p}=stats;
   const grade=p>=70?"Excellent":p>=50?"Good":p>=40?"Fair":"Needs Work";
@@ -1200,7 +1240,7 @@ function ResultScreen({stats,questions,answers,setScreen}){
   );
 }
 
-// ─── REVIEW ───────────────────────────────────────────────────────────────────
+// ─── REVIEW SCREEN ──────────────────────────────────────────────────────────────────
 function ReviewScreen({questions,answers,setScreen}){
   const [filter,setFilter]=useState("all");
   const list=questions.filter(q=>{
@@ -1253,7 +1293,7 @@ function ReviewScreen({questions,answers,setScreen}){
   );
 }
 
-// ─── STATS ────────────────────────────────────────────────────────────────────
+// ─── STATS SCREEN ──────────────────────────────────────────────────────────────────
 function StatsScreen({store,loaded}){
   if(!loaded) return <div className="screen"><div className="empty"><p>Loading...</p></div></div>;
   const sessions=store?.sessions||[];
@@ -1345,15 +1385,19 @@ function StatsScreen({store,loaded}){
   );
 }
 
-// ─── SETTINGS ─────────────────────────────────────────────────────────────────
+// ─── SETTINGS SCREEN ──────────────────────────────────────────────────────────────────
 function SettingsScreen({store,setStore,dark,setDark}){
   const [clearing,setClearing]=useState(false);
   const [done,setDone]=useState(false);
   const count=(store?.sessions||[]).length;
 
   async function handleClear(){
-    setClearing(true); await clearStore(); setStore(initStore()); setClearing(false);
-    setDone(true); setTimeout(()=>setDone(false),3000);
+    setClearing(true); 
+    await clearStore(); 
+    setStore(initStore()); 
+    setClearing(false);
+    setDone(true); 
+    setTimeout(()=>setDone(false),3000);
   }
 
   const rows=[
