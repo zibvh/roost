@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
@@ -27,24 +30,48 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Android SDK via sdkmanager
+      - name: Setup Android SDK
         run: |
-          mkdir -p $HOME/android-sdk/cmdline-tools
+          # Create Android SDK directory
+          mkdir -p $ANDROID_HOME/cmdline-tools
+          
+          # Download command line tools
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
-          unzip -q /tmp/cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools/
-          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
-          echo "y" | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          echo "y" | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.0"
+          
+          # Extract
+          unzip -q /tmp/cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools/
+          mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          
+          # Accept licenses
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1
+          
+          # Install required SDK components
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.0" "platform-tools" > /dev/null 2>&1
         env:
-          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
           ANDROID_HOME: ${{ github.workspace }}/android-sdk
 
       - name: Install Capacitor
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      - name: Create Capacitor config
+        run: |
+          cat > capacitor.config.json << 'EOF'
+          {
+            "appId": "com.rooster.cbt",
+            "appName": "Rooster CBT",
+            "webDir": "dist",
+            "server": {
+              "androidScheme": "https"
+            },
+            "android": {
+              "allowMixedContent": true
+            }
+          }
+          EOF
 
       - name: Init Capacitor
         run: npx cap init RoosterCBT com.rooster.cbt --web-dir=dist
@@ -61,7 +88,6 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
         env:
-          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
           ANDROID_HOME: ${{ github.workspace }}/android-sdk
 
       - name: Upload APK
