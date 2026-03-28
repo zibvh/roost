@@ -9,7 +9,6 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   ANDROID_HOME: ${{ github.workspace }}/android-sdk
   ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
-  JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
 
 jobs:
   build:
@@ -24,11 +23,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Setup Java
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Verify Java version
         run: java -version
@@ -41,24 +40,12 @@ jobs:
 
       - name: Setup Android SDK
         run: |
-          # Create Android SDK directory
           mkdir -p $ANDROID_HOME/cmdline-tools
-          
-          # Download command line tools
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
-          
-          # Extract
           unzip -q /tmp/cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools/
           mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
-          
-          # Accept licenses
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1
-          
-          # Install required SDK components
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.0" "platform-tools" > /dev/null 2>&1
-        env:
-          ANDROID_HOME: ${{ github.workspace }}/android-sdk
-          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
 
       - name: Install Capacitor
         run: |
@@ -89,20 +76,6 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Fix Java version in Android project
-        run: |
-          cd android
-          # Update sourceCompatibility and targetCompatibility in app/build.gradle
-          sed -i 's/sourceCompatibility = JavaVersion.VERSION_1_8/sourceCompatibility = JavaVersion.VERSION_17/g' app/build.gradle
-          sed -i 's/targetCompatibility = JavaVersion.VERSION_1_8/targetCompatibility = JavaVersion.VERSION_17/g' app/build.gradle
-          
-          # Also update the gradle file to use Java 17
-          sed -i 's/compileOptions {/compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17/g' app/build.gradle
-          
-          # Update gradle wrapper properties to use compatible distribution
-          echo "org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8" >> gradle.properties
-          echo "org.gradle.java.home=$JAVA_HOME" >> gradle.properties
-
       - name: Build APK
         run: |
           cd android
@@ -111,7 +84,6 @@ jobs:
         env:
           ANDROID_HOME: ${{ github.workspace }}/android-sdk
           ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
-          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
