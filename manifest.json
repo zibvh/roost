@@ -1,0 +1,13 @@
+{
+  "background_color": "#040404",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "rooster_UTME_jamb_simulation",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "rooster",
+  "start_url": "/",
+  "theme_color": "#663f3f",
+  "id": "rooster_v_1",
+  "description": "Offline jamb utme simulator app"
+}
