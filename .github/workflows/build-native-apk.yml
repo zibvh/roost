@@ -29,9 +29,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Verify Java version
-        run: java -version
-
       - name: Install dependencies
         run: npm install
 
@@ -46,29 +43,6 @@ jobs:
           mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1
           $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.0" "platform-tools" > /dev/null 2>&1
-
-      - name: Install Capacitor
-        run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-
-      - name: Create Capacitor config
-        run: |
-          cat > capacitor.config.json << 'EOF'
-          {
-            "appId": "com.rooster.cbt",
-            "appName": "Rooster CBT",
-            "webDir": "dist",
-            "server": {
-              "androidScheme": "https"
-            },
-            "android": {
-              "allowMixedContent": true
-            }
-          }
-          EOF
-
-      - name: Init Capacitor
-        run: npx cap init RoosterCBT com.rooster.cbt --web-dir=dist
 
       - name: Add Android platform
         run: npx cap add android
@@ -85,8 +59,29 @@ jobs:
           ANDROID_HOME: ${{ github.workspace }}/android-sdk
           ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Get version from package.json
+        id: version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Rename APK
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             rooster-v${{ steps.version.outputs.VERSION }}.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: rooster-native-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          tag_name: v${{ steps.version.outputs.VERSION }}
+          name: Rooster CBT v${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Rooster CBT v${{ steps.version.outputs.VERSION }}
+
+            **Install:** Download the APK below and open it on your Android device.  
+            **Update:** If you have a previous version installed, just install over it — your data is safe.
+
+            ### What's new
+            - See commit history for changes in this release
+          files: rooster-v${{ steps.version.outputs.VERSION }}.apk
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
