@@ -446,7 +446,7 @@ function topicResults(questions,answers){
 // ─── UPDATE CHECK ─────────────────────────────────────────────────────────────
 async function checkForUpdate(){
   try{
-    const res=await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`,
+    const res=await fetch(`https://api.github.com/repos/${zibvh/rooster}/releases/latest`,
       {headers:{"Accept":"application/vnd.github.v3+json"}});
     if(!res.ok) return null;
     const data=await res.json();
