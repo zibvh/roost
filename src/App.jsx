@@ -758,19 +758,10 @@ export default function App(){
 // ─── LANDING SCREEN ──────────────────────────────────────────────────────────────────
 function Landing({onStart,dark}){
   return(
-    <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
-      minHeight:"100vh",padding:"32px 24px",textAlign:"center",background:"var(--bg)"}}>
-      <div className="land" style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-        <div style={{width:80,height:80,borderRadius:24,background:"linear-gradient(135deg,var(--blue),var(--purple))",
-          display:"flex",alignItems:"center",justifyContent:"center",marginBottom:28,
-          boxShadow:"0 8px 32px rgba(79,124,255,.35)"}}>
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="14" r="9" fill="white" opacity="0.9"/>
-            <ellipse cx="20" cy="28" rx="14" ry="6" fill="white" opacity="0.6"/>
-            <circle cx="20" cy="14" r="4" fill="#4f7cff"/>
-            <path d="M14 10 Q20 4 26 10" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round"/>
-          </svg>
-        </div>
+    <div style={{width:48,height:48,borderRadius:"var(--r)",background:"linear-gradient(135deg,var(--blue),var(--purple))",
+  display:"flex",alignItems:"center",justifyContent:"center"}}>
+  <img src="/icon-192.png" alt="Rooster" style={{width:40,height:40,borderRadius:12}}/>
+</div>
         <div style={{fontSize:52,fontWeight:900,letterSpacing:-2,lineHeight:1,marginBottom:8,
           background:"linear-gradient(135deg,var(--text) 40%,var(--blue))",
           WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>
@@ -824,13 +815,11 @@ function HomeScreen({store,loaded,setScreen}){
             {APP} <span style={{color:"var(--blue)"}}>CBT</span>
           </div>
         </div>
-        <div style={{width:48,height:48,borderRadius:"var(--r)",background:"linear-gradient(135deg,var(--blue),var(--purple))",
-          display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
-            <circle cx="20" cy="14" r="9" fill="white" opacity="0.9"/>
-            <ellipse cx="20" cy="28" rx="14" ry="6" fill="white" opacity="0.5"/>
-            <circle cx="20" cy="14" r="4" fill="#4f7cff"/>
-          </svg>
+<div style={{width:80,height:80,borderRadius:24,
+  display:"flex",alignItems:"center",justifyContent:"center",marginBottom:28,
+  boxShadow:"0 8px 32px rgba(79,124,255,.35)"}}>
+  <img src="/icon-192.png" alt="Rooster CBT" style={{width:80,height:80,borderRadius:24}}/>
+</div>
         </div>
       </div>
 
