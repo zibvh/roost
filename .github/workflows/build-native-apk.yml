@@ -52,11 +52,19 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
+      - name: Restore signing keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/rooster-debug.keystore
+
       - name: Build APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug \
+            -Pandroid.injected.signing.store.file=${{ github.workspace }}/android/app/rooster-debug.keystore \
+            -Pandroid.injected.signing.store.password=rooster123 \
+            -Pandroid.injected.signing.key.alias=rooster \
+            -Pandroid.injected.signing.key.password=rooster123
         env:
           ANDROID_HOME: ${{ github.workspace }}/android-sdk
           ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
