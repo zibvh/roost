@@ -13,6 +13,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -76,7 +78,7 @@ jobs:
           body: |
             ## Rooster CBT v${{ steps.version.outputs.VERSION }}
 
-            **Install:** Download the APK below and open it on your Android device.  
+            **Install:** Download the APK below and open it on your Android device.
             **Update:** If you have a previous version installed, just install over it — your data is safe.
 
             ### What's new
