@@ -743,11 +743,7 @@ function Landing({onStart}){
           JAMB UTME Exam Simulator
         </div>
         <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:8,marginBottom:40,maxWidth:320}}>
-<<<<<<< HEAD
           {["14 Subjects","400+ Questions","2010–2025","Offline"].map(f=>(
-=======
-          {["14 Subjects","400+ Questions","2010–2025","Offline","Timed","Full Review"].map(f=>(
->>>>>>> a509ebaf2e1004cbb1774ec440eb53c631a562c0
             <span key={f} style={{padding:"6px 14px",borderRadius:999,background:"var(--bg3)",
               border:"1px solid var(--border2)",fontSize:12,fontWeight:700,color:"var(--text2)"}}>
               {f}
@@ -835,11 +831,7 @@ function HomeScreen({store,loaded,setScreen,update}){
       <div className="lbl">Quick Start</div>
       {[
         {l:"Subjects",sub:"Pick any subject & how many questions",n:"book"},
-<<<<<<< HEAD
         {l:"Mixed",sub:"Pick your 4 subjects + optional year",n:"chart"},
-=======
-        {l:"Mixed / UTME",sub:"Pick your 4 subjects + optional year",n:"chart"},
->>>>>>> a509ebaf2e1004cbb1774ec440eb53c631a562c0
       ].map((m,i)=>(
         <div key={i} className="mc" onClick={()=>setScreen("select")}>
           <div style={{width:44,height:44,borderRadius:"var(--r2)",background:"var(--bg4)",
@@ -914,11 +906,7 @@ function SelectScreen({startExam,setScreen}){
 
       <div className="lbl">Mode</div>
       <div style={{display:"flex",gap:8,marginBottom:24,flexWrap:"wrap"}}>
-<<<<<<< HEAD
         {[{id:"subject",l:"Subjects"},{id:"mixed",l:"Mixed"}].map(m=>(
-=======
-        {[{id:"subject",l:"Subjects"},{id:"mixed",l:"Mixed / UTME"}].map(m=>(
->>>>>>> a509ebaf2e1004cbb1774ec440eb53c631a562c0
           <button key={m.id} className={`chip ${mode===m.id?"on":""}`} onClick={()=>setMode(m.id)}>{m.l}</button>
         ))}
       </div>
@@ -1401,14 +1389,8 @@ function SettingsScreen({store,setStore,dark,setDark}){
     {l:"Version",v:VERSION},
     {l:"Years Covered",v:"2010 – 2025"},
     {l:"Subjects",v:`${ALL_SUBJECTS.length} subjects`},
-<<<<<<< HEAD
     {l:"Question Bank",v:`${QB.length} questions`},
     {l:"Exam Duration",v:"105 minutes"},
-=======
-    {l:"Question Bank",v:`${QB.length} questions (fully offline)`},
-    {l:"Exam Duration",v:"105 minutes (official UTME)"},
-    {l:"Scoring",v:"Scaled to 400 marks"},
->>>>>>> a509ebaf2e1004cbb1774ec440eb53c631a562c0
     {l:"Sessions Stored",v:String(count)},
   ];
 
@@ -1445,13 +1427,8 @@ function SettingsScreen({store,setStore,dark,setDark}){
 
       <div className="lbl">Data</div>
       <div className="card">
-<<<<<<< HEAD
-    / <div style={{fontSize:14,color:"var(--text2)",lineHeight:1.75,marginBottom:16}}>
+     <div style={{fontSize:14,color:"var(--text2)",lineHeight:1.75,marginBottom:16}}>
           Send any complaints to frntcoda@gmail.com
-=======
-        <div style={{fontSize:14,color:"var(--text2)",lineHeight:1.75,marginBottom:16}}>
-          All session history is stored locally on your device. No data is sent to any server.
->>>>>>> a509ebaf2e1004cbb1774ec440eb53c631a562c0
         </div>
         {done?(
           <div style={{padding:14,borderRadius:"var(--r3)",background:"rgba(34,197,94,.07)",
