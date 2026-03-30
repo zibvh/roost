@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const APP = "Rooster";
 const TAGLINE = "JAMB UTME Exam Simulator";
-const VERSION = "2.0.0";
+const VERSION = "2.0.1";
 const GITHUB_REPO = "zibvh/roost"; // ← replace with your actual repo
 const UTME_SECS = 105 * 60;
 const MARKS_TOTAL = 400;
@@ -11,20 +11,20 @@ const YEARS = Array.from({length:16},(_,i)=>2010+i);
 
 // Subject colours
 const SC = {
-  "Use of English":   "#a855f7",
-  "Mathematics":      "#06b6d4",
-  "Biology":          "#22c55e",
-  "Physics":          "#4f7cff",
-  "Chemistry":        "#f59e0b",
-  "Economics":        "#f97316",
-  "Government":       "#ec4899",
-  "Literature":       "#8b5cf6",
-  "Geography":        "#14b8a6",
-  "CRS":              "#eab308",
-  "IRS":              "#84cc16",
-  "Agricultural Science": "#10b981",
-  "Commerce":         "#fb923c",
-  "Accounting":       "#60a5fa",
+  "Use of English":   "#c17a8e",
+  "Mathematics":      "#7a9fc1",
+  "Biology":          "#7fb77e",
+  "Physics":          "#7a9fc1",
+  "Chemistry":        "#c9a96e",
+  "Economics":        "#da7756",
+  "Government":       "#b87a9e",
+  "Literature":       "#9e7ab8",
+  "Geography":        "#7ab8a8",
+  "CRS":              "#c9b96e",
+  "IRS":              "#9eb87a",
+  "Agricultural Science": "#7fb77e",
+  "Commerce":         "#da9056",
+  "Accounting":       "#7a9fc1",
 };
 
 // Cluster definitions
@@ -548,24 +548,40 @@ function I({n,sz=20,c="currentColor"}){
 }
 
 // ─── CSS ──────────────────────────────────────────────────────────────────────
-const CSS = `@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+const CSS = `@import url('https://fonts.googleapis.com/css2?family=Styrene+A:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{--bg:#07090e;--bg2:#0d1018;--bg3:#141820;--bg4:#1b2030;--blue:#4f7cff;--purple:#8b5cf6;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--text:#edf0ff;--text2:#8b93b8;--text3:#4a5270;--border:#1b2030;--border2:#262f48;--r:16px;--r2:12px;--r3:8px;--font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;--cbg:var(--bg2);--cbo:var(--border2);--obg:var(--bg2);--obo:var(--border2);--navbg:rgba(7,9,14,0.97);}
-.light{--bg:#f4f6fb;--bg2:#ffffff;--bg3:#eef0f7;--bg4:#e2e6f0;--text:#0f1320;--text2:#4a5270;--text3:#8b93b8;--border:#dde2f0;--border2:#c8cfdf;--cbg:#fff;--cbo:var(--border2);--obg:#fff;--obo:var(--border2);--navbg:rgba(244,246,251,0.97);}
+:root{
+  --bg:#1a1714;--bg2:#201d1a;--bg3:#272320;--bg4:#2f2b27;
+  --blue:#da7756;--purple:#c17a5e;--green:#7fb77e;--amber:#c9a96e;--red:#c96b6b;
+  --text:#ede8e3;--text2:#9d9189;--text3:#5c5249;
+  --border:#2a2622;--border2:#36302b;
+  --r:14px;--r2:10px;--r3:7px;
+  --font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
+  --cbg:var(--bg2);--cbo:var(--border2);--obg:var(--bg2);--obo:var(--border2);
+  --navbg:rgba(26,23,20,0.97);
+  --acc:#da7756;--acc2:#c96b45;
+}
+.light{
+  --bg:#f5f0eb;--bg2:#faf7f4;--bg3:#ede8e2;--bg4:#e2dbd4;
+  --text:#1a1714;--text2:#5c5249;--text3:#9d9189;
+  --border:#ddd6ce;--border2:#ccc4ba;
+  --cbg:#faf7f4;--cbo:var(--border2);--obg:#faf7f4;--obo:var(--border2);
+  --navbg:rgba(245,240,235,0.97);
+}
 body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;transition:background .2s,color .2s;}
 .app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative;}
 .screen{flex:1;padding:24px 16px 96px;overflow-y:auto;}
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--navbg);backdrop-filter:blur(20px);border-top:1px solid var(--border2);display:flex;justify-content:space-around;padding:10px 0 20px;z-index:100;}
 .nb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--text3);cursor:pointer;transition:color .15s;padding:4px 18px;}
-.nb.on{color:var(--blue);}
+.nb.on{color:var(--acc);}
 .nb span{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
 .card{background:var(--cbg);border:1px solid var(--cbo);border-radius:var(--r);padding:16px;}
-.card-acc{background:linear-gradient(135deg,rgba(79,124,255,.07),rgba(139,92,246,.04));border:1px solid rgba(79,124,255,.2);border-radius:var(--r);padding:18px;}
-.update-banner{background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(79,124,255,.08));border:1px solid rgba(34,197,94,.3);border-radius:var(--r2);padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.card-acc{background:linear-gradient(135deg,rgba(218,119,86,.07),rgba(201,107,69,.04));border:1px solid rgba(218,119,86,.2);border-radius:var(--r);padding:18px;}
+.update-banner{background:linear-gradient(135deg,rgba(127,183,126,.12),rgba(218,119,86,.08));border:1px solid rgba(127,183,126,.3);border-radius:var(--r2);padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:var(--r2);border:none;font-family:var(--font);font-weight:600;font-size:15px;cursor:pointer;transition:all .12s;width:100%;}
 .btn:disabled{opacity:.35;cursor:not-allowed;}
-.bp{background:var(--blue);color:#fff;}
-.bp:active:not(:disabled){background:#3a67e0;transform:scale(.98);}
+.bp{background:var(--acc);color:#fff;}
+.bp:active:not(:disabled){background:var(--acc2);transform:scale(.98);}
 .bg{background:transparent;color:var(--text2);border:1px solid var(--border2);}
 .bg:active{background:var(--bg3);}
 .bd{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.22);}
@@ -584,27 +600,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 .opt{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:var(--r2);border:1.5px solid var(--obo);background:var(--obg);cursor:pointer;transition:all .12s;margin-bottom:10px;}
 .opt:active{transform:scale(.99);}
-.osel{border-color:var(--blue)!important;background:rgba(79,124,255,.07)!important;}
+.osel{border-color:var(--acc)!important;background:rgba(218,119,86,.07)!important;}
 .ocor{border-color:var(--green)!important;background:rgba(34,197,94,.07)!important;}
 .owrng{border-color:var(--red)!important;background:rgba(239,68,68,.07)!important;}
 .okey{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;color:var(--text2);transition:all .12s;}
-.osel .okey{border-color:var(--blue);background:var(--blue);color:#fff;}
+.osel .okey{border-color:var(--acc);background:var(--acc);color:#fff;}
 .ocor .okey{border-color:var(--green);background:var(--green);color:#fff;}
 .owrng .okey{border-color:var(--red);background:var(--red);color:#fff;}
 .pg{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin:10px 0;}
 .pb{aspect-ratio:1;border-radius:6px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all .1s;background:var(--bg3);color:var(--text3);}
-.pb.pa{background:rgba(79,124,255,.18);color:var(--blue);}
+.pb.pa{background:rgba(218,119,86,.18);color:var(--acc);}
 .pb.pf2{background:rgba(245,158,11,.18);color:var(--amber);}
-.pb.pc{outline:2px solid var(--blue);outline-offset:1px;color:var(--text);}
+.pb.pc{outline:2px solid var(--acc);outline-offset:1px;color:var(--text);}
 .chip{background:var(--bg3);border:1px solid var(--border2);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .12s;white-space:nowrap;}
-.chip.on{background:rgba(79,124,255,.14);border-color:rgba(79,124,255,.35);color:var(--blue);}
+.chip.on{background:rgba(218,119,86,.14);border-color:rgba(218,119,86,.35);color:var(--acc);}
 .chip:active{transform:scale(.95);}
 .tabs{display:flex;background:var(--bg3);border-radius:var(--r2);padding:4px;gap:4px;margin-bottom:20px;}
 .tab{flex:1;padding:10px 4px;border:none;background:none;color:var(--text3);font-family:var(--font);font-size:13px;font-weight:600;border-radius:var(--r3);cursor:pointer;transition:all .18s;}
-.tab.on{background:var(--cbg);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.15);}
-.expl{background:rgba(79,124,255,.05);border:1px solid rgba(79,124,255,.18);border-radius:var(--r2);padding:14px;margin-top:12px;}
+.tab.on{background:var(--cbg);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.expl{background:rgba(218,119,86,.05);border:1px solid rgba(218,119,86,.18);border-radius:var(--r2);padding:14px;margin-top:12px;}
 .yp{padding:7px 13px;border-radius:999px;border:1.5px solid var(--border2);background:var(--cbg);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .12s;}
-.yp.on{border-color:var(--blue);background:rgba(79,124,255,.1);color:var(--blue);}
+.yp.on{border-color:var(--acc);background:rgba(218,119,86,.1);color:var(--acc);}
 .yp:active{transform:scale(.94);}
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
 .sc{border-radius:var(--r);padding:16px;cursor:pointer;border:2px solid transparent;transition:all .15s;}
@@ -620,7 +636,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .empty{text-align:center;padding:56px 24px;color:var(--text3);}
 .empty p{margin-top:10px;font-size:14px;line-height:1.7;}
 .tgl{width:46px;height:24px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
-.tgl.on{background:var(--blue);}
+.tgl.on{background:var(--acc);}
 .tgl.off{background:var(--border2);}
 .tgl-dot{position:absolute;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;}
 .tgl.on .tgl-dot{left:25px;}
@@ -735,7 +751,7 @@ function Landing({onStart}){
       <div className="land" style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
         <img src="/icon-192.png" alt="Rooster" style={{width:80,height:80,borderRadius:24,marginBottom:28,boxShadow:"0 8px 32px rgba(79,124,255,.35)"}}/>
         <div style={{fontSize:52,fontWeight:900,letterSpacing:-2,lineHeight:1,marginBottom:8,
-          background:"linear-gradient(135deg,var(--text) 40%,var(--blue))",
+          background:"linear-gradient(135deg,var(--text) 60%,var(--acc))",
           WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>
           Rooster
         </div>
@@ -778,10 +794,10 @@ function HomeScreen({store,loaded,setScreen,update}){
         <div>
           <div className="lbl" style={{marginBottom:3}}>JAMB UTME</div>
           <div style={{fontSize:28,fontWeight:900,letterSpacing:-1}}>
-            Rooster <span style={{color:"var(--blue)"}}>CBT</span>
+            Rooster <span style={{color:"var(--acc)"}}>CBT</span>
           </div>
         </div>
-        <div style={{width:48,height:48,borderRadius:"var(--r)",background:"linear-gradient(135deg,var(--blue),var(--purple))",
+        <div style={{width:48,height:48,borderRadius:"var(--r)",background:"linear-gradient(135deg,var(--acc),var(--amber))",
           display:"flex",alignItems:"center",justifyContent:"center"}}>
           <img src="/icon-192.png" alt="Rooster" style={{width:40,height:40,borderRadius:12}}/>
         </div>
@@ -809,7 +825,7 @@ function HomeScreen({store,loaded,setScreen,update}){
             <div className="row" style={{marginBottom:12}}>
               <div>
                 <div style={{fontSize:11,color:"var(--text3)",fontWeight:600,marginBottom:2}}>Average Score</div>
-                <div style={{fontSize:36,fontWeight:800,fontFamily:"var(--mono)",color:avg>=50?"var(--blue)":"var(--red)"}}>
+                <div style={{fontSize:36,fontWeight:800,fontFamily:"var(--mono)",color:avg>=50?"var(--acc)":"var(--red)"}}>
                   {getScore(totalC,totalQ)}<span style={{fontSize:16,color:"var(--text3)",fontWeight:600}}>/400</span>
                 </div>
               </div>
@@ -818,7 +834,7 @@ function HomeScreen({store,loaded,setScreen,update}){
                 <div style={{fontSize:28,fontWeight:800,fontFamily:"var(--mono)"}}>{totalQ}</div>
               </div>
             </div>
-            <div className="prog"><div className="pf" style={{width:`${avg}%`,background:"linear-gradient(90deg,var(--blue),var(--purple))"}}/></div>
+            <div className="prog"><div className="pf" style={{width:`${avg}%`,background:"linear-gradient(90deg,var(--acc),var(--amber))"}}/></div>
             <div style={{fontSize:11,color:"var(--text3)",marginTop:6}}>{sessions.length} session{sessions.length!==1?"s":""} · {totalC} correct</div>
           </>
         ):(
@@ -836,7 +852,7 @@ function HomeScreen({store,loaded,setScreen,update}){
         <div key={i} className="mc" onClick={()=>setScreen("select")}>
           <div style={{width:44,height:44,borderRadius:"var(--r2)",background:"var(--bg4)",
             border:"1px solid var(--border2)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-            <I n={m.n} sz={18} c="var(--blue)"/>
+            <I n={m.n} sz={18} c="var(--acc)"/>
           </div>
           <div style={{flex:1}}><div style={{fontWeight:700,fontSize:15}}>{m.l}</div>
           <div style={{fontSize:12,color:"var(--text3)",marginTop:2}}>{m.sub}</div></div>
@@ -853,7 +869,7 @@ function HomeScreen({store,loaded,setScreen,update}){
                 background:s.pct>=50?"rgba(79,124,255,.1)":"rgba(239,68,68,.08)",
                 display:"flex",alignItems:"center",justifyContent:"center",
                 fontFamily:"var(--mono)",fontWeight:800,fontSize:13,
-                color:s.pct>=50?"var(--blue)":"var(--red)"}}>
+                color:s.pct>=50?"var(--acc)":"var(--red)"}}>
                 {s.score}
               </div>
               <div style={{flex:1,minWidth:0}}>
@@ -939,7 +955,7 @@ function SelectScreen({startExam,setScreen}){
               <button key={c} className={`chip ${cluster===c?"on":""}`} onClick={()=>pickCluster(c)}>{c}</button>
             ))}
           </div>
-          <div className="lbl">Your 4 Subjects <span style={{color:"var(--blue)",fontWeight:800}}>{selectedSubs.length}/4</span></div>
+          <div className="lbl">Your 4 Subjects <span style={{color:"var(--acc)",fontWeight:800}}>{selectedSubs.length}/4</span></div>
           <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:8}}>
             {ALL_SUBJECTS.map(s=>{
               const on=selectedSubs.includes(s);
@@ -1013,7 +1029,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
             <button className="btn bg bsm" onClick={()=>setShowPal(false)}><I n="x" sz={15}/></button>
           </div>
           <div style={{display:"flex",gap:16,marginBottom:12,fontSize:11,fontWeight:700}}>
-            <span style={{color:"var(--blue)"}}>Answered</span>
+            <span style={{color:"var(--acc)"}}>Answered</span>
             <span style={{color:"var(--amber)"}}>Flagged</span>
             <span style={{color:"var(--text3)"}}>Unanswered</span>
           </div>
@@ -1022,7 +1038,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
               const idxs=questions.reduce((acc,q_,i)=>q_.s===sub?[...acc,i]:acc,[]);
               return(
                 <div key={sub} style={{marginBottom:12}}>
-                  <div style={{fontSize:10,fontWeight:700,color:SC[sub]||"var(--blue)",letterSpacing:.5,textTransform:"uppercase",marginBottom:6}}>{sub}</div>
+                  <div style={{fontSize:10,fontWeight:700,color:SC[sub]||"var(--acc)",letterSpacing:.5,textTransform:"uppercase",marginBottom:6}}>{sub}</div>
                   <div className="pg">
                     {idxs.map(i=>(
                       <button key={i} className={`pb ${answers[questions[i].id]?"pa":""} ${flagged.has(questions[i].id)?"pf2":""} ${i===currentQ?"pc":""}`}
@@ -1086,14 +1102,14 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
         </div>
         <div className="row" style={{marginBottom:8}}>
           <div className="prog" style={{flex:1,marginRight:10}}>
-            <div className="pf" style={{width:`${((currentQ+1)/questions.length)*100}%`,background:"var(--blue)"}}/>
+            <div className="pf" style={{width:`${((currentQ+1)/questions.length)*100}%`,background:"var(--acc)"}}/>
           </div>
           <div style={{fontSize:12,fontWeight:700,fontFamily:"var(--mono)",color:"var(--text2)",whiteSpace:"nowrap"}}>
             {currentQ+1} / {questions.length}
           </div>
         </div>
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-          <span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:999,color:SC[q.s]||"var(--blue)",background:(SC[q.s]||"#4f7cff")+"14"}}>{q.s}</span>
+          <span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:999,color:SC[q.s]||"var(--acc)",background:(SC[q.s]||"var(--acc)")+"14"}}>{q.s}</span>
           <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:999,color:"var(--text3)",background:"var(--bg3)"}}>{q.t}</span>
           <span className={`bdg ${diffCls}`}>{q.d}</span>
           <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:999,color:"var(--text3)",background:"var(--bg3)",fontFamily:"var(--mono)"}}>{q.y}</span>
@@ -1102,11 +1118,11 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
 
       <div style={{flex:1,overflowY:"auto",padding:"14px 16px 0"}}>
         {isNewSubj&&(
-          <div className="sub-break" style={{background:(SC[q.s]||"#4f7cff")+"12",border:`1px solid ${SC[q.s]||"#4f7cff"}30`}}>
-            <div style={{width:8,height:8,borderRadius:"50%",background:SC[q.s]||"var(--blue)",flexShrink:0}}/>
+          <div className="sub-break" style={{background:(SC[q.s]||"var(--acc)")+"12",border:`1px solid ${SC[q.s]||"var(--acc)"}30`}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:SC[q.s]||"var(--acc)",flexShrink:0}}/>
             <div>
               <div style={{fontSize:10,color:"var(--text3)",fontWeight:600}}>Now starting</div>
-              <div style={{fontSize:14,fontWeight:700,color:SC[q.s]||"var(--blue)"}}>{q.s}</div>
+              <div style={{fontSize:14,fontWeight:700,color:SC[q.s]||"var(--acc)"}}>{q.s}</div>
             </div>
           </div>
         )}
@@ -1135,7 +1151,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
 
         {isRev&&(
           <div className="expl fade">
-            <div style={{fontSize:11,fontWeight:700,color:"var(--blue)",marginBottom:6,letterSpacing:.5,textTransform:"uppercase"}}>Explanation</div>
+            <div style={{fontSize:11,fontWeight:700,color:"var(--acc)",marginBottom:6,letterSpacing:.5,textTransform:"uppercase"}}>Explanation</div>
             <div style={{fontSize:13,color:"var(--text2)",lineHeight:1.8}}>{q.e}</div>
           </div>
         )}
@@ -1164,7 +1180,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
 function ResultScreen({stats,questions,answers,setScreen}){
   const {correct,total,bySubject,score,pct:p}=stats;
   const grade=p>=70?"Excellent":p>=50?"Good":p>=40?"Fair":"Needs Work";
-  const gc=p>=70?"var(--green)":p>=50?"var(--blue)":p>=40?"var(--amber)":"var(--red)";
+  const gc=p>=70?"var(--green)":p>=50?"var(--acc)":p>=40?"var(--amber)":"var(--red)";
   const r=52,C=2*Math.PI*r;
 
   return(
@@ -1188,7 +1204,7 @@ function ResultScreen({stats,questions,answers,setScreen}){
       </div>
 
       <div style={{display:"flex",gap:10,marginBottom:20}}>
-        {[{l:"Correct",v:correct,c:"var(--green)"},{l:"Wrong",v:total-correct,c:"var(--red)"},{l:"Total",v:total,c:"var(--blue)"}].map(s=>(
+        {[{l:"Correct",v:correct,c:"var(--green)"},{l:"Wrong",v:total-correct,c:"var(--red)"},{l:"Total",v:total,c:"var(--acc)"}].map(s=>(
           <div key={s.l} className="card" style={{flex:1,textAlign:"center"}}>
             <div style={{fontSize:24,fontWeight:800,color:s.c,fontFamily:"var(--mono)"}}>{s.v}</div>
             <div style={{fontSize:11,color:"var(--text3)",fontWeight:600,marginTop:3}}>{s.l}</div>
@@ -1205,9 +1221,9 @@ function ResultScreen({stats,questions,answers,setScreen}){
               <div key={sub} className="card" style={{marginBottom:10}}>
                 <div className="row" style={{marginBottom:8}}>
                   <div style={{fontSize:13,fontWeight:700}}>{sub}</div>
-                  <div style={{fontSize:13,fontWeight:800,color:SC[sub]||"var(--blue)",fontFamily:"var(--mono)"}}>{sp}%</div>
+                  <div style={{fontSize:13,fontWeight:800,color:SC[sub]||"var(--acc)",fontFamily:"var(--mono)"}}>{sp}%</div>
                 </div>
-                <div className="prog"><div className="pf" style={{width:`${sp}%`,background:SC[sub]||"var(--blue)"}}/></div>
+                <div className="prog"><div className="pf" style={{width:`${sp}%`,background:SC[sub]||"var(--acc)"}}/></div>
                 <div style={{fontSize:11,color:"var(--text3)",marginTop:6,fontWeight:600}}>{d.correct} of {d.total} correct</div>
               </div>
             );
@@ -1267,7 +1283,7 @@ function ReviewScreen({questions,answers,setScreen}){
               })}
             </div>
             <div className="expl" style={{marginTop:12}}>
-              <div style={{fontSize:11,fontWeight:700,color:"var(--blue)",marginBottom:6,letterSpacing:.5,textTransform:"uppercase"}}>Explanation</div>
+              <div style={{fontSize:11,fontWeight:700,color:"var(--acc)",marginBottom:6,letterSpacing:.5,textTransform:"uppercase"}}>Explanation</div>
               <div style={{fontSize:13,color:"var(--text2)",lineHeight:1.8}}>{q.e}</div>
             </div>
           </div>
@@ -1301,7 +1317,7 @@ function StatsScreen({store,loaded}){
       <div style={{fontSize:18,fontWeight:800,marginBottom:20}}>Statistics</div>
       <div className="card-acc" style={{marginBottom:20,textAlign:"center"}}>
         <div className="lbl" style={{marginBottom:4}}>Overall Average</div>
-        <div style={{fontSize:44,fontWeight:800,color:avg>=50?"var(--blue)":"var(--red)",fontFamily:"var(--mono)"}}>
+        <div style={{fontSize:44,fontWeight:800,color:avg>=50?"var(--acc)":"var(--red)",fontFamily:"var(--mono)"}}>
           {getScore(totalC,totalQ)}<span style={{fontSize:16,color:"var(--text3)",fontWeight:600}}>/400</span>
         </div>
         <div style={{fontSize:12,color:"var(--text3)",marginTop:4}}>{totalC} correct from {totalQ} questions · {sessions.length} session{sessions.length>1?"s":""}</div>
@@ -1317,9 +1333,9 @@ function StatsScreen({store,loaded}){
               <div key={s} className="card" style={{marginBottom:10}}>
                 <div className="row" style={{marginBottom:8}}>
                   <div style={{fontWeight:700,fontSize:14}}>{s}</div>
-                  <span style={{fontFamily:"var(--mono)",fontWeight:800,color:SC[s]||"var(--blue)",fontSize:15}}>{sp}%</span>
+                  <span style={{fontFamily:"var(--mono)",fontWeight:800,color:SC[s]||"var(--acc)",fontSize:15}}>{sp}%</span>
                 </div>
-                <div className="prog"><div className="pf" style={{width:`${sp}%`,background:SC[s]||"var(--blue)"}}/></div>
+                <div className="prog"><div className="pf" style={{width:`${sp}%`,background:SC[s]||"var(--acc)"}}/></div>
                 <div className="row" style={{marginTop:6}}>
                   <span style={{fontSize:11,color:"var(--text3)",fontWeight:600}}>{d.correct}/{d.total} correct · {d.sessions} session{d.sessions>1?"s":""}</span>
                   <span style={{fontSize:11,fontWeight:700,color:sp>=70?"var(--green)":sp>=50?"var(--amber)":"var(--red)"}}>{status}</span>
@@ -1354,7 +1370,7 @@ function StatsScreen({store,loaded}){
           <div style={{width:44,height:44,borderRadius:"var(--r3)",flexShrink:0,
             background:s.pct>=50?"rgba(79,124,255,.09)":"rgba(239,68,68,.07)",
             display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"var(--mono)",fontWeight:800,fontSize:13,
-            color:s.pct>=50?"var(--blue)":"var(--red)"}}>
+            color:s.pct>=50?"var(--acc)":"var(--red)"}}>
             {s.score}
           </div>
           <div style={{flex:1,minWidth:0}}>
@@ -1427,7 +1443,7 @@ function SettingsScreen({store,setStore,dark,setDark}){
 
       <div className="lbl">Data</div>
       <div className="card">
-     <div style={{fontSize:14,color:"var(--text2)",lineHeight:1.75,marginBottom:16}}>
+    / <div style={{fontSize:14,color:"var(--text2)",lineHeight:1.75,marginBottom:16}}>
           Send any complaints to frntcoda@gmail.com
         </div>
         {done?(
