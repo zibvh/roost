@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const APP = "Rooster";
 const TAGLINE = "JAMB UTME Exam Simulator";
 const VERSION = "2.0.0";
-const GITHUB_REPO = "your-username/rooster"; // ← replace with your actual repo
+const GITHUB_REPO = "zibvh/roost"; // ← replace with your actual repo
 const UTME_SECS = 105 * 60;
 const MARKS_TOTAL = 400;
 const SKEY = "rooster_v2";
