@@ -1,10 +1,8 @@
 {
-  "version": "2.2.0",
+  "version": "2.2.1",
   "whatsNew": [
-    "Updated UI",
-    "updated question bank",
-    "",
-    "Auto-update system added"
+    "Google play doesn't rag it anymore",
+    
   ],
-  "apkUrl": "https://getrooster.onrender.com/download/rooster-2.2.0.apk"
+  "apkUrl": "https://getrooster.onrender.com/download/rooster-2.2.1.apk"
 }
