@@ -1,10 +1,10 @@
 {
-  "version": "2.1.0",
+  "version": "2.2.0",
   "whatsNew": [
-    "Brown colour theme applied",
-    "Fixed English question count to 60",
-    "Removed dark/light mode toggle",
+    "Updated UI",
+    "updated question bank",
+    "",
     "Auto-update system added"
   ],
-  "apkUrl": "https://getrooster.onrender.com/download/rooster-2.1.0.apk"
+  "apkUrl": "https://getrooster.onrender.com/download/rooster-2.2.0.apk"
 }
