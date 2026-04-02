@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Privacy Policy — Rooster CBT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg:      #1a1714;
+        --bg2:     #201d1a;
+        --bg3:     #272320;
+        --bg4:     #2f2b27;
+        --border:  #2a2622;
+        --border2: #3a322c;
+        --text:    #ede8e3;
+        --text2:   #ddd0c5;
+        --text3:   #5c5249;
+        --accent:  #da7756;
+        --accent2: #f09b7a;
+        --mono:    'JetBrains Mono', monospace;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: Inter, sans-serif;
+        font-size: 15px;
+        line-height: 1.7;
+        min-height: 100vh;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--bg2);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-brand {
+        font-weight: 800;
+        font-size: 17px;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, var(--text) 40%, var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-decoration: none;
+      }
+      .nav-back {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        opacity: 0.9;
+        transition: opacity .15s;
+      }
+      .nav-back:hover { opacity: 1; }
+      .nav-back svg { width: 14px; height: 14px; }
+
+      /* ── HERO ── */
+      .hero {
+        padding: 56px 24px 40px;
+        max-width: 720px;
+        margin: 0 auto;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-label {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--accent);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      .hero h1 {
+        font-size: clamp(28px, 5vw, 40px);
+        font-weight: 900;
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+        margin-bottom: 16px;
+      }
+      .hero-meta {
+        font-size: 13px;
+        color: var(--text3);
+        font-family: var(--mono);
+      }
+      .hero-meta span {
+        color: var(--text3);
+        margin: 0 8px;
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+      }
+
+      section {
+        margin-bottom: 44px;
+      }
+
+      h2 {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-family: var(--mono);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      h2::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border2);
+      }
+
+      p {
+        color: var(--text2);
+        margin-bottom: 12px;
+        font-size: 14.5px;
+      }
+      p:last-child { margin-bottom: 0; }
+
+      .card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+        margin-top: 16px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      ul li {
+        color: var(--text2);
+        font-size: 14.5px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      ul li:last-child { border-bottom: none; padding-bottom: 0; }
+      ul li::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent);
+        margin-top: 8px;
+        flex-shrink: 0;
+      }
+
+      .highlight {
+        background: var(--bg3);
+        border-left: 3px solid var(--accent);
+        border-radius: 0 8px 8px 0;
+        padding: 14px 18px;
+        margin: 16px 0;
+        font-size: 14px;
+        color: var(--text2);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--bg3);
+        border: 1px solid var(--border2);
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent2);
+        font-family: var(--mono);
+        margin-bottom: 8px;
+      }
+
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      /* ── FOOTER ── */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 28px 24px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--text3);
+        font-family: var(--mono);
+      }
+    </style>
+  </head>
+  <body>
+
+    <nav>
+      <a class="nav-brand" href="/">Rooster CBT</a>
+      <a class="nav-back" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back
+      </a>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-label">Legal</div>
+      <h1>Privacy Policy</h1>
+      <div class="hero-meta">
+        Rooster CBT <span>·</span> com.rooster.cbt <span>·</span> Last updated: April 2026
+      </div>
+    </div>
+
+    <div class="content">
+
+      <section>
+        <h2>Overview</h2>
+        <div class="highlight">
+          Rooster CBT does not collect, transmit, or share any personal data. Everything stays on your device.
+        </div>
+        <p>
+          This Privacy Policy explains how Rooster CBT ("the app") handles your information. The app is a JAMB UTME exam practice tool for Android, built for Nigerian secondary school students.
+        </p>
+      </section>
+
+      <section>
+        <h2>Data We Collect</h2>
+        <p>We collect <strong>nothing</strong>. Specifically:</p>
+        <div class="card">
+          <ul>
+            <li>No account registration or sign-in required</li>
+            <li>No personal information (name, email, phone number) is ever asked for</li>
+            <li>No usage analytics or crash reporting sent to any server</li>
+            <li>No location data collected</li>
+            <li>No device identifiers collected</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Local Storage</h2>
+        <p>
+          The app stores your practice history, scores, and settings locally on your device using Android's standard app storage. This data never leaves your device.
+        </p>
+        <p>
+          Uninstalling the app permanently deletes all locally stored data.
+        </p>
+      </section>
+
+      <section>
+        <h2>Network Requests</h2>
+        <p>The app makes one type of network request:</p>
+        <div class="card">
+          <ul>
+            <li>On launch and every 6 hours, the app checks <a href="https://getrooster.onrender.com/downloads/version.json">getrooster.onrender.com</a> for a newer version. No personal data is sent — it is a read-only check.</li>
+          </ul>
+        </div>
+        <p style="margin-top:14px;">No other outbound connections are made.</p>
+      </section>
+
+      <section>
+        <h2>Third Parties</h2>
+        <p>
+          Rooster CBT does not integrate any third-party SDKs, advertising networks, analytics services, or social media platforms. There are no third parties with access to any data from this app.
+        </p>
+      </section>
+
+      <section>
+        <h2>Children's Privacy</h2>
+        <p>
+          Rooster CBT is designed for secondary school students, including users under 13. Because the app collects no data whatsoever, it is safe for users of all ages.
+        </p>
+      </section>
+
+      <section>
+        <h2>Changes to This Policy</h2>
+        <p>
+          If this policy changes in a future version, the updated policy will be posted at this URL and the "Last updated" date above will reflect the change.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>
+          Questions about this privacy policy? Reach out via the
+          <a href="https://getrooster.onrender.com">Rooster website</a>.
+        </p>
+      </section>
+
+    </div>
+
+    <footer>
+      © 2026 Rooster CBT · com.rooster.cbt · All rights reserved
+    </footer>
+
+  </body>
+</html>
