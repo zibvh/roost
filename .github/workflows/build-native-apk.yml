@@ -1,0 +1,131 @@
+name: Build Native Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ANDROID_HOME: ${{ github.workspace }}/android-sdk
+  ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Setup Android SDK
+        run: |
+          mkdir -p $ANDROID_HOME/cmdline-tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/cmdline-tools.zip
+          unzip -q /tmp/cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools/
+          mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools" > /dev/null 2>&1
+
+      - name: Add Android platform
+        run: npx cap add android
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Add INTERNET permission to AndroidManifest
+        run: |
+          MANIFEST=android/app/src/main/AndroidManifest.xml
+          if ! grep -q "android.permission.INTERNET" $MANIFEST; then
+            sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET" />' $MANIFEST
+          fi
+
+      - name: Set targetSdkVersion to 34
+        run: |
+          # Capacitor uses variables.gradle — patch that instead of build.gradle
+          if [ -f android/variables.gradle ]; then
+            sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 34/' android/variables.gradle
+            sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 34/' android/variables.gradle
+            echo "--- variables.gradle after patch ---"
+            cat android/variables.gradle
+          else
+            echo "variables.gradle not found — injecting via gradle.properties"
+            echo "compileSdkVersion=34" >> android/gradle.properties
+            echo "targetSdkVersion=34" >> android/gradle.properties
+            echo "--- gradle.properties ---"
+            cat android/gradle.properties
+          fi
+
+      - name: Copy app icon into Android resources
+        run: |
+          RES=android/app/src/main/res
+          cp -r android-icons/mipmap-mdpi       $RES/
+          cp -r android-icons/mipmap-hdpi       $RES/
+          cp -r android-icons/mipmap-xhdpi      $RES/
+          cp -r android-icons/mipmap-xxhdpi     $RES/
+          cp -r android-icons/mipmap-xxxhdpi    $RES/
+          cp -r android-icons/mipmap-anydpi-v26 $RES/
+          cp android-icons/values/ic_launcher_background.xml $RES/values/
+
+      - name: Restore signing keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/rooster-debug.keystore
+
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug \
+            -Pandroid.injected.signing.store.file=${{ github.workspace }}/android/app/rooster-debug.keystore \
+            -Pandroid.injected.signing.store.password=rooster123 \
+            -Pandroid.injected.signing.key.alias=rooster \
+            -Pandroid.injected.signing.key.password=rooster123
+        env:
+          ANDROID_HOME: ${{ github.workspace }}/android-sdk
+          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+
+      - name: Get version from package.json
+        id: version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Rename APK
+        run: |
+          cp android/app/build/outputs/apk/debug/app-debug.apk \
+             rooster-v${{ steps.version.outputs.VERSION }}.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.VERSION }}
+          name: Rooster CBT v${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Rooster CBT v${{ steps.version.outputs.VERSION }}
+
+            **Install:** Download the APK below and open it on your Android device.
+            **Update:** If you have a previous version installed, just install over it — your data is safe.
+
+            ### What's new
+            - See commit history for changes in this release
+          files: rooster-v${{ steps.version.outputs.VERSION }}.apk
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
