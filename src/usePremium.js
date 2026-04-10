@@ -3,10 +3,10 @@ import { useState, useEffect, useCallback } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
-const PKEY = "rooster_premium";
+const PKEY        = "rooster_premium";
 const PREMIUM_DAYS = 400;
 
-// ─── Capacitor Preferences dual-layer (mirrors App.jsx pattern) ───────────────
+// ─── Capacitor Preferences dual-layer (mirrors App.jsx) ───────────────────────
 const CAP_AVAIL =
   typeof window !== "undefined" &&
   window.Capacitor &&
@@ -44,111 +44,107 @@ async function prefRemove(key) {
   localStorage.removeItem(key);
 }
 
-// ─── cache helpers ────────────────────────────────────────────────────────────
+// ─── cache helpers ─────────────────────────────────────────────────────────────
+// cache shape: { type: "email"|"code", key: string, expiry: ms }
 
 async function getCached() {
   try {
     const raw = await prefGet(PKEY);
     if (!raw) return null;
-    return JSON.parse(raw); // { email, expiry (ms) }
-  } catch {
-    return null;
-  }
+    return JSON.parse(raw);
+  } catch { return null; }
 }
 
-async function setCached(email, expiryMs) {
-  await prefSet(PKEY, JSON.stringify({ email, expiry: expiryMs }));
+async function setCached(type, key, expiryMs) {
+  await prefSet(PKEY, JSON.stringify({ type, key, expiry: expiryMs }));
 }
 
 async function clearCached() {
   await prefRemove(PKEY);
 }
 
-// ─── hook ─────────────────────────────────────────────────────────────────────
+// ─── hook ──────────────────────────────────────────────────────────────────────
 
 export function usePremium() {
-  const [isPremium, setIsPremium] = useState(false);
+  const [isPremium,    setIsPremium]    = useState(false);
   const [premiumEmail, setPremiumEmail] = useState(null);
-  const [daysLeft, setDaysLeft] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [daysLeft,     setDaysLeft]     = useState(null);
+  const [loading,      setLoading]      = useState(true);
 
-  const checkPremium = useCallback(async (emailOverride = null) => {
+  const checkPremium = useCallback(async () => {
     setLoading(true);
-
     const cached = await getCached();
-    const email = emailOverride || cached?.email;
+    const now    = Date.now();
 
-    if (!email) {
-      setIsPremium(false);
-      setLoading(false);
-      return false;
-    }
-
-    const now = Date.now();
-
-    // 1. Fast path: valid cache
-    if (cached && cached.email === email && cached.expiry > now) {
+    // Fast path: valid local cache
+    if (cached && cached.expiry > now) {
       const remaining = Math.ceil((cached.expiry - now) / 86400000);
       setIsPremium(true);
-      setPremiumEmail(email);
+      setPremiumEmail(cached.type === "email" ? cached.key : null);
       setDaysLeft(remaining);
       setLoading(false);
       return true;
     }
 
-    // 2. Cache miss/expired → check Firestore
-    try {
-      const ref = doc(db, "premium_users", email.toLowerCase().trim());
-      const snap = await getDoc(ref);
+    // No cache or expired → check Firestore
+    if (cached?.key) {
+      try {
+        const docId = cached.type === "code"
+          ? `code_${cached.key.toUpperCase()}`
+          : cached.key.toLowerCase().trim();
 
-      if (snap.exists()) {
-        const data = snap.data();
-        const expiryMs = data.premiumExpiry?.toMillis?.() ?? data.premiumExpiry;
-
-        if (expiryMs > now) {
-          const remaining = Math.ceil((expiryMs - now) / 86400000);
-          await setCached(email, expiryMs);
+        const snap = await getDoc(doc(db, "premium_users", docId));
+        if (snap.exists()) {
+          const data    = snap.data();
+          const expiryMs = data.premiumExpiry?.toMillis?.() ?? data.premiumExpiry;
+          if (expiryMs > now) {
+            const remaining = Math.ceil((expiryMs - now) / 86400000);
+            await setCached(cached.type, cached.key, expiryMs);
+            setIsPremium(true);
+            setPremiumEmail(cached.type === "email" ? cached.key : null);
+            setDaysLeft(remaining);
+            setLoading(false);
+            return true;
+          }
+        }
+      } catch (err) {
+        console.error("[usePremium] Firestore error:", err);
+        // If offline, trust cache even if expired recently (grace period 7 days)
+        if (cached && cached.expiry > now - 7 * 86400000) {
           setIsPremium(true);
-          setPremiumEmail(email);
-          setDaysLeft(remaining);
+          setPremiumEmail(cached.type === "email" ? cached.key : null);
+          setDaysLeft(0);
           setLoading(false);
           return true;
         }
       }
-
-      // Expired or not found
-      await clearCached();
-      setIsPremium(false);
-      setPremiumEmail(null);
-      setDaysLeft(null);
-    } catch (err) {
-      console.error("[usePremium] Firestore error:", err);
-      // Fallback to cache if Firestore is unreachable
-      if (cached && cached.expiry > now) {
-        const remaining = Math.ceil((cached.expiry - now) / 86400000);
-        setIsPremium(true);
-        setPremiumEmail(cached.email);
-        setDaysLeft(remaining);
-        setLoading(false);
-        return true;
-      }
-      setIsPremium(false);
     }
 
+    await clearCached();
+    setIsPremium(false);
+    setPremiumEmail(null);
+    setDaysLeft(null);
     setLoading(false);
     return false;
   }, []);
 
-  useEffect(() => {
-    checkPremium();
-  }, [checkPremium]);
+  useEffect(() => { checkPremium(); }, [checkPremium]);
 
-  // Call this immediately after successful payment verification
+  // After successful Paystack payment
   const activatePremium = useCallback(async (email) => {
     const expiryMs = Date.now() + PREMIUM_DAYS * 24 * 60 * 60 * 1000;
-    await setCached(email, expiryMs);
+    await setCached("email", email, expiryMs);
     setIsPremium(true);
     setPremiumEmail(email);
+    setDaysLeft(PREMIUM_DAYS);
+  }, []);
+
+  // After successful access code redemption
+  const activateWithCode = useCallback(async (code) => {
+    const expiryMs = Date.now() + PREMIUM_DAYS * 24 * 60 * 60 * 1000;
+    await setCached("code", code.toUpperCase(), expiryMs);
+    setIsPremium(true);
+    setPremiumEmail(null);
     setDaysLeft(PREMIUM_DAYS);
   }, []);
 
@@ -159,5 +155,5 @@ export function usePremium() {
     setDaysLeft(null);
   }, []);
 
-  return { isPremium, premiumEmail, daysLeft, loading, checkPremium, activatePremium, revokePremium };
+  return { isPremium, premiumEmail, daysLeft, loading, checkPremium, activatePremium, activateWithCode, revokePremium };
 }

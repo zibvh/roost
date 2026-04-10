@@ -1,6 +1,6 @@
 {
   "name": "rooster-cbt",
-  "version": "2.2.5",
+  "version": "2.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

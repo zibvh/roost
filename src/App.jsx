@@ -4,7 +4,7 @@ import PremiumModal from "./PremiumModal";
 
 const APP = "Rooster";
 const TAGLINE = "JAMB UTME Exam Simulator";
-const VERSION = "2.2.5";
+const VERSION = "2.3.0";
 const UPDATE_CHECK_URL = "https://raw.githubusercontent.com/zibvh/roost/main/public/version.json";
 const JAMB_WEEK = new Date("2026-04-26"); // JAMB UTME 2026 week
 const GITHUB_REPO = "zibvh/roost"; // ← replace with your actual repo
@@ -5674,7 +5674,7 @@ export default function App(){
   const [showConf,setShowConf]=useState(false);
   const [update,setUpdate]=useState(null);
   const [showPremium,setShowPremium]=useState(false);
-  const {isPremium,premiumEmail,daysLeft,loading:premiumLoading,activatePremium}=usePremium();
+  const {isPremium,premiumEmail,daysLeft,loading:premiumLoading,activatePremium,activateWithCode}=usePremium();
 
   useEffect(()=>{
     loadStore().then(s=>{
@@ -5752,8 +5752,13 @@ export default function App(){
         {showPremium && (
           <PremiumModal
             onClose={()=>setShowPremium(false)}
-            onSuccess={async(email)=>{
-              await activatePremium(email);
+            onSuccess={async(identifier)=>{
+              // identifier is email for Paystack, code string for access code
+              if(identifier && identifier.includes("@")){
+                await activatePremium(identifier);
+              } else {
+                await activateWithCode(identifier);
+              }
               setShowPremium(false);
             }}
           />
@@ -5774,61 +5779,62 @@ export default function App(){
 }
 
 // ─── NOTIFICATIONS ────────────────────────────────────────────────────────────
-function scheduleStudyReminder(name){
+async function scheduleStudyReminder(name){
   // Must never throw or crash — fully wrapped
-  setTimeout(()=>{
-    try{
-      const LN=window?.Capacitor?.Plugins?.LocalNotifications;
-      if(!LN || typeof LN.requestPermissions!=="function") return;
-      LN.requestPermissions().then(perm=>{
-        try{
-          if(!perm || perm.display!=="granted") return;
+  try{
+    const isNative=typeof window!=="undefined" && window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+    if(!isNative) return;
 
-          const slots=[
-            {id:43, hour:8,  msgs:[
-              `Good morning ${name}! Start the day with 10 questions 🌅`,
-              `Rise and grind ${name} — JAMB won't pass itself 🐓`,
-              `Morning ${name}! A quick practice before the day starts? ☀️`,
-            ]},
-            {id:44, hour:12, msgs:[
-              `${name}, take a lunch break with some JAMB questions 📚`,
-              `Midday check-in ${name} — how's the prep going? 💪`,
-              `${name}, 5 minutes of practice at lunch = progress 🎯`,
-            ]},
-            {id:45, hour:16, msgs:[
-              `${name}, afternoon session time! Keep the streak going 🔥`,
-              `Hey ${name}! Wind down with a quick practice round 📖`,
-              `${name}, the afternoon is perfect for revision 💡`,
-            ]},
-            {id:46, hour:18, msgs:[
-              `${name}, evening study session — you've got this! 🌙`,
-              `Don't sleep on it ${name} — one more round before dinner 😅`,
-              `${name}, your JAMB score won't improve itself 😂 Practice now!`,
-            ]},
-          ];
+    const {LocalNotifications} = await import("@capacitor/local-notifications");
 
-          // Cancel all existing reminders first
-          LN.cancel({notifications:slots.map(s=>({id:s.id}))}).catch(()=>{}).finally(()=>{
-            try{
-              const notifications=slots.map(s=>{
-                const msg=s.msgs[Math.floor(Math.random()*s.msgs.length)];
-                return{
-                  id:s.id,
-                  title:"Rooster CBT 🐓",
-                  body:msg,
-                  schedule:{every:"day", on:{hour:s.hour, minute:0}},
-                  sound:"default",
-                  actionTypeId:"",
-                  extra:null,
-                };
-              });
-              LN.schedule({notifications}).catch(()=>{});
-            }catch{}
-          });
-        }catch{}
-      }).catch(()=>{});
-    }catch{}
-  },1000);
+    // Request permission
+    let perm;
+    try{ perm = await LocalNotifications.requestPermissions(); }catch{ return; }
+    if(!perm || perm.display!=="granted") return;
+
+    const slots=[
+      {id:43, hour:8,  msgs:[
+        `Good morning ${name}! Start the day with 10 questions 🌅`,
+        `Rise and grind ${name} — JAMB won't pass itself 🐓`,
+        `Morning ${name}! A quick practice before the day starts? ☀️`,
+      ]},
+      {id:44, hour:12, msgs:[
+        `${name}, take a lunch break with some JAMB questions 📚`,
+        `Midday check-in ${name} — how's the prep going? 💪`,
+        `${name}, 5 minutes of practice at lunch = progress 🎯`,
+      ]},
+      {id:45, hour:16, msgs:[
+        `${name}, afternoon session time! Keep the streak going 🔥`,
+        `Hey ${name}! Wind down with a quick practice round 📖`,
+        `${name}, the afternoon is perfect for revision 💡`,
+      ]},
+      {id:46, hour:18, msgs:[
+        `${name}, evening study session — you've got this! 🌙`,
+        `Don't sleep on it ${name} — one more round before dinner 😅`,
+        `${name}, your JAMB score won't improve itself 😂 Practice now!`,
+      ]},
+    ];
+
+    // Cancel existing first
+    try{ await LocalNotifications.cancel({notifications:slots.map(s=>({id:s.id}))}); }catch{}
+
+    const notifications=slots.map(s=>{
+      const msg=s.msgs[Math.floor(Math.random()*s.msgs.length)];
+      return{
+        id:s.id,
+        title:"Rooster CBT 🐓",
+        body:msg,
+        schedule:{every:"day", on:{hour:s.hour, minute:0}},
+        sound:null,
+        actionTypeId:"",
+        extra:null,
+        smallIcon:"ic_launcher",
+        iconColor:"#da7756",
+      };
+    });
+
+    await LocalNotifications.schedule({notifications});
+  }catch{}
 }
 
 // ─── ONBOARDING ───────────────────────────────────────────────────────────────

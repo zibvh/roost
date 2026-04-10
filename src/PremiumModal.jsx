@@ -2,236 +2,121 @@
 import { useState } from "react";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "./firebaseConfig";
-import { openPaystack, openFlutterwave } from "./paymentService";
+import { openPaystack } from "./paymentService";
 
-const verifyPayment = httpsCallable(functions, "verifyPayment");
-
-// ─── styles ──────────────────────────────────────────────────────────────────
+const verifyPayment   = httpsCallable(functions, "verifyPayment");
+const redeemAccessCode = httpsCallable(functions, "redeemAccessCode");
 
 const styles = {
   overlay: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(15, 8, 3, 0.82)",
+    position: "fixed", inset: 0,
+    background: "rgba(15,8,3,.82)",
     backdropFilter: "blur(6px)",
     zIndex: 9999,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: "flex", alignItems: "center", justifyContent: "center",
     padding: "16px",
-    fontFamily: "'Georgia', 'Times New Roman', serif",
+    fontFamily: "'Georgia','Times New Roman',serif",
   },
   modal: {
-    background: "linear-gradient(160deg, #2a1a0e 0%, #1c1108 100%)",
+    background: "linear-gradient(160deg,#2a1a0e 0%,#1c1108 100%)",
     border: "1px solid #6b3f1a",
     borderRadius: "16px",
-    width: "100%",
-    maxWidth: "400px",
+    width: "100%", maxWidth: "400px",
     padding: "28px 24px",
     position: "relative",
-    boxShadow: "0 24px 64px rgba(0,0,0,0.7), inset 0 1px 0 rgba(205,133,63,0.15)",
+    boxShadow: "0 24px 64px rgba(0,0,0,.7),inset 0 1px 0 rgba(205,133,63,.15)",
   },
   closeBtn: {
-    position: "absolute",
-    top: "14px",
-    right: "16px",
-    background: "none",
-    border: "none",
-    color: "#8a6040",
-    fontSize: "20px",
-    cursor: "pointer",
-    lineHeight: 1,
-    padding: "4px",
+    position:"absolute", top:"14px", right:"16px",
+    background:"none", border:"none", color:"#8a6040",
+    fontSize:"20px", cursor:"pointer", lineHeight:1, padding:"4px",
   },
   badge: {
-    display: "inline-block",
-    background: "linear-gradient(90deg, #cd853f, #a0522d)",
-    color: "#fff8f0",
-    fontSize: "10px",
-    fontFamily: "'Courier New', monospace",
-    letterSpacing: "2px",
-    textTransform: "uppercase",
-    padding: "3px 10px",
-    borderRadius: "20px",
-    marginBottom: "12px",
+    display:"inline-block",
+    background:"linear-gradient(90deg,#cd853f,#a0522d)",
+    color:"#fff8f0", fontSize:"10px",
+    fontFamily:"'Courier New',monospace",
+    letterSpacing:"2px", textTransform:"uppercase",
+    padding:"3px 10px", borderRadius:"20px", marginBottom:"12px",
   },
-  title: {
-    color: "#f5deb3",
-    fontSize: "22px",
-    fontWeight: "700",
-    margin: "0 0 4px",
-    letterSpacing: "-0.3px",
+  title:   { color:"#f5deb3", fontSize:"22px", fontWeight:"700", margin:"0 0 4px", letterSpacing:"-0.3px" },
+  subtitle:{ color:"#8a6040", fontSize:"13px", margin:"0 0 20px", lineHeight:"1.5" },
+  price:   { color:"#cd853f", fontSize:"32px", fontWeight:"700", fontFamily:"'Courier New',monospace", margin:"0 0 2px" },
+  priceSub:{ color:"#6b4c2a", fontSize:"12px", margin:"0 0 20px" },
+  features:{ listStyle:"none", padding:0, margin:"0 0 24px", display:"flex", flexDirection:"column", gap:"8px" },
+  featureItem:{ display:"flex", alignItems:"center", gap:"10px", color:"#c8a882", fontSize:"13px" },
+  featureDot:{ width:"6px", height:"6px", borderRadius:"50%", background:"#cd853f", flexShrink:0 },
+  divider: { border:"none", borderTop:"1px solid #3a2010", margin:"0 0 20px" },
+  label:   { color:"#8a6040", fontSize:"11px", letterSpacing:"1.5px", textTransform:"uppercase", fontFamily:"'Courier New',monospace", marginBottom:"8px", display:"block" },
+  input: {
+    width:"100%", background:"#120a04",
+    border:"1px solid #3a2010", borderRadius:"8px",
+    padding:"11px 14px", color:"#f5deb3", fontSize:"14px",
+    outline:"none", marginBottom:"16px",
+    boxSizing:"border-box", fontFamily:"inherit", transition:"border-color .2s",
   },
-  subtitle: {
-    color: "#8a6040",
-    fontSize: "13px",
-    margin: "0 0 20px",
-    lineHeight: "1.5",
+  tabs: { display:"flex", gap:"8px", marginBottom:"20px" },
+  tab: {
+    flex:1, padding:"10px", borderRadius:"8px", border:"1px solid #3a2010",
+    background:"transparent", color:"#8a6040", fontSize:"13px",
+    fontWeight:"600", cursor:"pointer", transition:"all .2s",
   },
-  price: {
-    color: "#cd853f",
-    fontSize: "32px",
-    fontWeight: "700",
-    fontFamily: "'Courier New', monospace",
-    margin: "0 0 2px",
-  },
-  priceSub: {
-    color: "#6b4c2a",
-    fontSize: "12px",
-    margin: "0 0 20px",
-  },
-  features: {
-    listStyle: "none",
-    padding: 0,
-    margin: "0 0 24px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-  },
-  featureItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    color: "#c8a882",
-    fontSize: "13px",
-  },
-  featureDot: {
-    width: "6px",
-    height: "6px",
-    borderRadius: "50%",
-    background: "#cd853f",
-    flexShrink: 0,
-  },
-  divider: {
-    border: "none",
-    borderTop: "1px solid #3a2010",
-    margin: "0 0 20px",
-  },
-  label: {
-    color: "#8a6040",
-    fontSize: "11px",
-    letterSpacing: "1.5px",
-    textTransform: "uppercase",
-    fontFamily: "'Courier New', monospace",
-    marginBottom: "8px",
-    display: "block",
-  },
-  emailInput: {
-    width: "100%",
-    background: "#120a04",
-    border: "1px solid #3a2010",
-    borderRadius: "8px",
-    padding: "11px 14px",
-    color: "#f5deb3",
-    fontSize: "14px",
-    outline: "none",
-    marginBottom: "16px",
-    boxSizing: "border-box",
-    fontFamily: "inherit",
-    transition: "border-color 0.2s",
-  },
-  btnRow: {
-    display: "flex",
-    gap: "10px",
+  tabActive: {
+    background:"rgba(205,133,63,.12)", borderColor:"#cd853f", color:"#f5deb3",
   },
   btnPaystack: {
-    flex: 1,
-    padding: "12px",
-    borderRadius: "8px",
-    border: "none",
-    background: "linear-gradient(135deg, #00c3ff11, #00c3ff22)",
-    borderTop: "1px solid #00c3ff44",
-    color: "#a8e6ff",
-    fontSize: "13px",
-    fontWeight: "600",
-    cursor: "pointer",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "4px",
-    transition: "all 0.2s",
+    width:"100%", padding:"13px", borderRadius:"8px", border:"none",
+    background:"linear-gradient(135deg,#cd853f,#a0522d)",
+    color:"#fff8f0", fontSize:"14px", fontWeight:"700",
+    cursor:"pointer", display:"flex", alignItems:"center",
+    justifyContent:"center", gap:"8px", transition:"opacity .2s",
   },
-  btnFlutterwave: {
-    flex: 1,
-    padding: "12px",
-    borderRadius: "8px",
-    border: "none",
-    background: "linear-gradient(135deg, #ff6b0011, #ff6b0022)",
-    borderTop: "1px solid #ff6b0044",
-    color: "#ffb347",
-    fontSize: "13px",
-    fontWeight: "600",
-    cursor: "pointer",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "4px",
-    transition: "all 0.2s",
+  btnAccess: {
+    width:"100%", padding:"13px", borderRadius:"8px",
+    border:"1px solid #cd853f", background:"transparent",
+    color:"#cd853f", fontSize:"14px", fontWeight:"700",
+    cursor:"pointer", transition:"all .2s",
   },
-  btnProviderLabel: {
-    fontSize: "10px",
-    opacity: 0.6,
-    fontFamily: "'Courier New', monospace",
-    letterSpacing: "1px",
-  },
-  errorText: {
-    color: "#e05a3a",
-    fontSize: "12px",
-    marginTop: "10px",
-    textAlign: "center",
-  },
-  successBox: {
-    textAlign: "center",
-    padding: "16px 0 4px",
-  },
-  successIcon: {
-    fontSize: "40px",
-    marginBottom: "10px",
-  },
-  successTitle: {
-    color: "#f5deb3",
-    fontSize: "18px",
-    fontWeight: "700",
-    marginBottom: "6px",
-  },
-  successSub: {
-    color: "#8a6040",
-    fontSize: "13px",
-    lineHeight: "1.6",
-  },
-  loadingText: {
-    color: "#8a6040",
-    fontSize: "13px",
-    textAlign: "center",
-    padding: "10px 0",
-    fontFamily: "'Courier New', monospace",
-    letterSpacing: "1px",
-  },
+  errorText:  { color:"#e05a3a", fontSize:"12px", marginTop:"10px", textAlign:"center" },
+  loadingText:{ color:"#8a6040", fontSize:"13px", textAlign:"center", padding:"10px 0", fontFamily:"'Courier New',monospace", letterSpacing:"1px" },
+  successBox: { textAlign:"center", padding:"16px 0 4px" },
+  successIcon:{ fontSize:"40px", marginBottom:"10px" },
+  successTitle:{ color:"#f5deb3", fontSize:"18px", fontWeight:"700", marginBottom:"6px" },
+  successSub:  { color:"#8a6040", fontSize:"13px", lineHeight:"1.6" },
 };
 
-// ─── component ───────────────────────────────────────────────────────────────
-
 export default function PremiumModal({ onClose, onSuccess }) {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | verifying | success | error
-  const [error, setError] = useState("");
+  const [tab,      setTab]      = useState("pay");   // "pay" | "code"
+  const [email,    setEmail]    = useState("");
+  const [code,     setCode]     = useState("");
+  const [status,   setStatus]   = useState("idle");  // idle | verifying | success | error
+  const [error,    setError]    = useState("");
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isValidCode  = code.trim().length >= 4;
 
+  // ── Payment flow ──────────────────────────────────────────────────────────
   async function handlePaymentSuccess({ reference, provider }) {
-    setStatus("verifying");
-    setError("");
+    setStatus("verifying"); setError("");
     try {
-      const result = await verifyPayment({ email: email.trim().toLowerCase(), reference, provider });
-      if (result.data?.success) {
-        setStatus("success");
-        onSuccess?.(email.trim().toLowerCase());
-      } else {
-        throw new Error(result.data?.message || "Verification failed");
-      }
+      const res = await verifyPayment({ email: email.trim().toLowerCase(), reference, provider });
+      if (res.data?.success) { setStatus("success"); onSuccess?.(email.trim().toLowerCase()); }
+      else throw new Error(res.data?.message || "Verification failed");
     } catch (err) {
-      console.error("[PremiumModal] verify error:", err);
-      setError(err.message || "Could not verify payment. Contact support.");
+      setError(err.message || "Could not verify payment. Try again.");
+      setStatus("error");
+    }
+  }
+
+  // ── Access code flow ──────────────────────────────────────────────────────
+  async function handleAccessCode() {
+    setStatus("verifying"); setError("");
+    try {
+      const res = await redeemAccessCode({ code: code.trim().toUpperCase() });
+      if (res.data?.success) { setStatus("success"); onSuccess?.(normalizedCode); }
+      else throw new Error(res.data?.message || "Invalid access code");
+    } catch (err) {
+      setError(err.message || "Invalid or already used access code.");
       setStatus("error");
     }
   }
@@ -242,9 +127,8 @@ export default function PremiumModal({ onClose, onSuccess }) {
   }
 
   return (
-    <div style={styles.overlay} onClick={(e) => e.target === e.currentTarget && handleClose()}>
+    <div style={styles.overlay} onClick={e => e.target===e.currentTarget && handleClose()}>
       <div style={styles.modal}>
-        {/* Close */}
         <button style={styles.closeBtn} onClick={handleClose}>✕</button>
 
         {status === "success" ? (
@@ -252,7 +136,7 @@ export default function PremiumModal({ onClose, onSuccess }) {
             <div style={styles.successIcon}>🐓</div>
             <div style={styles.successTitle}>Premium Unlocked!</div>
             <p style={styles.successSub}>
-              Full access activated for <strong style={{ color: "#cd853f" }}>{email}</strong>.<br />
+              Full access activated.<br/>
               Valid for 400 days. Go ace that UTME!
             </p>
           </div>
@@ -270,71 +154,72 @@ export default function PremiumModal({ onClose, onSuccess }) {
                 "All 14 UTME subjects — full question bank",
                 "Performance analytics & weak area insights",
                 "Ad-free exam experience",
-                "Offline — no internet needed after unlock",
-              ].map((f) => (
+                "Works offline after unlock",
+              ].map(f => (
                 <li key={f} style={styles.featureItem}>
-                  <span style={styles.featureDot} />
-                  {f}
+                  <span style={styles.featureDot}/>{f}
                 </li>
               ))}
             </ul>
 
-            <hr style={styles.divider} />
+            <hr style={styles.divider}/>
 
-            <label style={styles.label}>Your Email</label>
-            <input
-              style={{
-                ...styles.emailInput,
-                borderColor: email && !isValidEmail ? "#e05a3a" : "#3a2010",
-              }}
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={status === "verifying"}
-              onFocus={(e) => (e.target.style.borderColor = "#cd853f")}
-              onBlur={(e) => (e.target.style.borderColor = "#3a2010")}
-            />
+            {/* Tabs */}
+            <div style={styles.tabs}>
+              <button
+                style={{...styles.tab, ...(tab==="pay" ? styles.tabActive : {})}}
+                onClick={()=>{ setTab("pay"); setError(""); }}>
+                Pay ₦1,000
+              </button>
+              <button
+                style={{...styles.tab, ...(tab==="code" ? styles.tabActive : {})}}
+                onClick={()=>{ setTab("code"); setError(""); }}>
+                Access Code
+              </button>
+            </div>
 
             {status === "verifying" ? (
-              <p style={styles.loadingText}>verifying payment...</p>
-            ) : (
-              <div style={styles.btnRow}>
+              <p style={styles.loadingText}>
+                {tab==="pay" ? "verifying payment..." : "checking code..."}
+              </p>
+            ) : tab === "pay" ? (
+              <>
+                <label style={styles.label}>Your Email</label>
+                <input
+                  style={{...styles.input, borderColor: email&&!isValidEmail?"#e05a3a":"#3a2010"}}
+                  type="email" placeholder="you@example.com"
+                  value={email} onChange={e=>setEmail(e.target.value)}
+                  onFocus={e=>e.target.style.borderColor="#cd853f"}
+                  onBlur={e=>e.target.style.borderColor="#3a2010"}
+                />
                 <button
-                  style={{
-                    ...styles.btnPaystack,
-                    opacity: isValidEmail ? 1 : 0.4,
-                    cursor: isValidEmail ? "pointer" : "not-allowed",
-                  }}
+                  style={{...styles.btnPaystack, opacity: isValidEmail ? 1 : 0.4}}
                   disabled={!isValidEmail}
-                  onClick={() =>
-                    openPaystack(email.trim(), handlePaymentSuccess, () => {})
-                  }
-                >
+                  onClick={()=>openPaystack(email.trim(), handlePaymentSuccess, ()=>{})}>
                   Pay with Paystack
-                  <span style={styles.btnProviderLabel}>CARD · USSD · BANK</span>
                 </button>
-
+              </>
+            ) : (
+              <>
+                <label style={styles.label}>Enter Access Code</label>
+                <input
+                  style={styles.input}
+                  type="text" placeholder="e.g. ROOST-XXXX"
+                  value={code}
+                  onChange={e=>setCode(e.target.value.toUpperCase())}
+                  onFocus={e=>e.target.style.borderColor="#cd853f"}
+                  onBlur={e=>e.target.style.borderColor="#3a2010"}
+                />
                 <button
-                  style={{
-                    ...styles.btnFlutterwave,
-                    opacity: isValidEmail ? 1 : 0.4,
-                    cursor: isValidEmail ? "pointer" : "not-allowed",
-                  }}
-                  disabled={!isValidEmail}
-                  onClick={() =>
-                    openFlutterwave(email.trim(), handlePaymentSuccess, () => {})
-                  }
-                >
-                  Pay with Flutterwave
-                  <span style={styles.btnProviderLabel}>CARD · TRANSFER</span>
+                  style={{...styles.btnAccess, opacity: isValidCode ? 1 : 0.4}}
+                  disabled={!isValidCode}
+                  onClick={handleAccessCode}>
+                  Unlock with Code
                 </button>
-              </div>
+              </>
             )}
 
-            {(status === "error") && (
-              <p style={styles.errorText}>⚠ {error}</p>
-            )}
+            {(status==="error") && <p style={styles.errorText}>⚠ {error}</p>}
           </>
         )}
       </div>

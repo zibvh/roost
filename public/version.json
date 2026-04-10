@@ -1,7 +1,9 @@
 {
-  "version": "2.2.5",
+  "version": "2.3.0",
   "whatsNew": [
-    "Improved UX"
+    "improved, paid version of the app with more features and better performance",
+    "Two subjects available for free: Use of English and Mathematics",
+    "Freemium model with premium upgrade option - premium available for one thousand naira"
   ],
   "apkUrl": "https://getrooster.onrender.com/downloads/rooster-v2.2.4.apk"
 }
