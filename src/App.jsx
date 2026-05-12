@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { usePremium } from "./usePremium";
-import PremiumModal from "./PremiumModal";
 
 const APP = "Rooster";
 const TAGLINE = "JAMB UTME Exam Simulator";
@@ -11,7 +9,6 @@ const GITHUB_REPO = "zibvh/roost";
 const UTME_SECS = 105 * 60;
 const MARKS_TOTAL = 400;
 const SKEY = "rooster_v2";
-const FREE_SUBJECTS = ["Use of English", "Mathematics"];
 const YEARS = Array.from({length:16},(_,i)=>2010+i);
 
 // Subject colours
@@ -5697,8 +5694,6 @@ export default function App(){
   const [showPal,setShowPal]=useState(false);
   const [showConf,setShowConf]=useState(false);
   const [update,setUpdate]=useState(null);
-  const [showPremium,setShowPremium]=useState(false);
-  const {isPremium,premiumEmail,daysLeft,loading:premiumLoading,activatePremium}=usePremium();
 
   useEffect(()=>{
     loadStore().then(s=>{
@@ -5757,8 +5752,8 @@ export default function App(){
           }}/>
         )}
         {onboarded && screen==="landing"  && <Landing onStart={()=>setScreen("home")}/>}
-        {onboarded && screen==="home"     && <HomeScreen store={store} loaded={loaded} setScreen={setScreen} update={update} isPremium={isPremium} daysLeft={daysLeft} premiumLoading={premiumLoading} onGoPremium={()=>setShowPremium(true)}/>}
-        {onboarded && screen==="select"   && <SelectScreen startExam={startExam} setScreen={setScreen} isPremium={isPremium} onGoPremium={()=>setShowPremium(true)}/>}
+        {onboarded && screen==="home"     && <HomeScreen store={store} loaded={loaded} setScreen={setScreen} update={update}/>}
+        {onboarded && screen==="select"   && <SelectScreen startExam={startExam} setScreen={setScreen}/>}
         {onboarded && screen==="exam"     && questions.length>0 && (
           <ExamScreen questions={questions} currentQ={currentQ} setCurrentQ={setCurrentQ}
             answers={answers} setAnswers={setAnswers} flagged={flagged} setFlagged={setFlagged}
@@ -5770,18 +5765,10 @@ export default function App(){
           <ResultScreen stats={result} questions={questions} answers={answers} setScreen={setScreen} userName={store?.userName||""}/>
         )}
         {onboarded && screen==="review"   && <ReviewScreen questions={questions} answers={answers} setScreen={setScreen}/>}
-        {onboarded && screen==="stats"    && <StatsScreen store={store} loaded={loaded} isPremium={isPremium} onGoPremium={()=>setShowPremium(true)}/>}
-        {onboarded && screen==="settings" && <SettingsScreen store={store} setStore={setStore} isPremium={isPremium} daysLeft={daysLeft} premiumEmail={premiumEmail} onGoPremium={()=>setShowPremium(true)}/>}
+        {onboarded && screen==="stats"    && <StatsScreen store={store} loaded={loaded}/>}
+        {onboarded && screen==="settings" && <SettingsScreen store={store} setStore={setStore}/>}
 
-        {showPremium && (
-          <PremiumModal
-            onClose={()=>setShowPremium(false)}
-            onSuccess={async(email)=>{
-              await activatePremium(email);
-              setShowPremium(false);
-            }}
-          />
-        )}
+
         {onboarded && screen!=="exam" && screen!=="landing" && (
           <nav className="nav">
             {[{id:"home",n:"home",l:"Home"},{id:"practice",n:"book",l:"Practice"},
@@ -5949,7 +5936,7 @@ function Landing({onStart}){
 }
 
 // ─── HOME SCREEN ─────────────────────────────────────────────────────────────
-function HomeScreen({store,loaded,setScreen,update,isPremium,daysLeft,premiumLoading,onGoPremium}){
+function HomeScreen({store,loaded,setScreen,update}){
   const sessions=store?.sessions||[];
   const totalQ=store?.totalQ||0;
   const totalC=store?.totalC||0;
@@ -6005,32 +5992,19 @@ function HomeScreen({store,loaded,setScreen,update,isPremium,daysLeft,premiumLoa
         </div>
       )}
 
-      {/* Premium banner */}
-      {!premiumLoading&&(isPremium?(
-        <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",
-          borderRadius:12,background:"rgba(255,124,69,.07)",
-          border:"1px solid rgba(255,124,69,.18)",marginBottom:16}} className="fade-1">
-          <span style={{fontSize:16}}>🐓</span>
-          <div style={{flex:1}}>
-            <div style={{fontSize:11,fontWeight:800,color:"var(--accent)",fontFamily:"var(--display)",letterSpacing:".5px"}}>PREMIUM</div>
-            <div style={{fontSize:11,color:"var(--text3)",marginTop:1,fontFamily:"var(--mono)"}}>{daysLeft} days left</div>
-          </div>
-          <span style={{fontSize:10,fontWeight:700,color:"var(--green)",background:"rgba(94,201,122,.1)",
-            padding:"2px 8px",borderRadius:999,fontFamily:"var(--display)",letterSpacing:".5px",
-            border:"1px solid rgba(94,201,122,.2)"}}>ACTIVE</span>
+      {/* Beta badge */}
+      <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",
+        borderRadius:12,background:"rgba(94,201,122,.07)",
+        border:"1px solid rgba(94,201,122,.18)",marginBottom:16}} className="fade-1">
+        <span style={{fontSize:16}}>🐓</span>
+        <div style={{flex:1}}>
+          <div style={{fontSize:11,fontWeight:800,color:"var(--green)",fontFamily:"var(--display)",letterSpacing:".5px"}}>FREE BETA</div>
+          <div style={{fontSize:11,color:"var(--text3)",marginTop:1,fontFamily:"var(--mono)"}}>All features unlocked</div>
         </div>
-      ):(
-        <div className="prem-banner fade-1" onClick={onGoPremium}>
-          <div style={{width:36,height:36,borderRadius:10,background:"rgba(245,200,66,.1)",
-            border:"1px solid rgba(245,200,66,.18)",display:"flex",alignItems:"center",
-            justifyContent:"center",fontSize:18,flexShrink:0}}>✦</div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:13,fontWeight:800,color:"var(--gold)",fontFamily:"var(--display)"}}>Unlock Premium</div>
-            <div style={{fontSize:11,color:"var(--text3)",marginTop:1}}>All 14 subjects · Analytics · ₦1,000</div>
-          </div>
-          <I n="right" sz={14} c="var(--gold)"/>
-        </div>
-      ))}
+        <span style={{fontSize:10,fontWeight:700,color:"var(--green)",background:"rgba(94,201,122,.1)",
+          padding:"2px 8px",borderRadius:999,fontFamily:"var(--display)",letterSpacing:".5px",
+          border:"1px solid rgba(94,201,122,.2)"}}>OPEN</span>
+      </div>
 
       {/* Score card */}
       <div className="card fade-2" style={{marginBottom:14,padding:"20px 18px"}}>
@@ -6150,7 +6124,7 @@ function HomeScreen({store,loaded,setScreen,update,isPremium,daysLeft,premiumLoa
 }
 
 // ─── SELECT SCREEN ────────────────────────────────────────────────────────────
-function SelectScreen({startExam,setScreen,isPremium,onGoPremium}){
+function SelectScreen({startExam,setScreen}){
   const [mode,setMode]=useState("subject");
   const [subject,setSubject]=useState("Biology");
   const [count,setCount]=useState(40);
@@ -6197,19 +6171,18 @@ function SelectScreen({startExam,setScreen,isPremium,onGoPremium}){
           <div className="lbl">Subject</div>
           <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:22}}>
             {ALL_SUBJECTS.map(s=>{
-              const locked=!isPremium&&!FREE_SUBJECTS.includes(s);
               const active=subject===s;
               const color=SC[s]||"var(--accent)";
               return(
                 <button key={s}
-                  onClick={()=>{ if(locked){onGoPremium();return;} pickSubject(s); }}
+                  onClick={()=>pickSubject(s)}
                   style={{padding:"8px 14px",borderRadius:999,border:"none",
                     background:active?color:"var(--bg3)",
-                    color:active?"#fff":locked?"var(--text4)":"var(--text2)",
+                    color:active?"#fff":"var(--text2)",
                     fontSize:12,fontWeight:700,cursor:"pointer",transition:"all .18s",
-                    opacity:locked?0.4:1,fontFamily:"var(--display)",
+                    fontFamily:"var(--display)",
                     boxShadow:active?`0 4px 16px -4px ${color}80`:"none"}}>
-                  {locked?"🔒 ":""}{s}
+                  {s}
                 </button>
               );
             })}
@@ -6279,21 +6252,11 @@ function SelectScreen({startExam,setScreen,isPremium,onGoPremium}){
         </>
       )}
 
-      {(!isPremium&&mode==="subject"&&!FREE_SUBJECTS.includes(subject))?(
-        <button className="btn bp" onClick={onGoPremium}>
-          <I n="lock" sz={15} c="#fff"/> Unlock to Practice
-        </button>
-      ):(!isPremium&&mode==="mixed")?(
-        <button className="btn bp" onClick={onGoPremium}>
-          <I n="lock" sz={15} c="#fff"/> Unlock Mixed Mode
-        </button>
-      ):(
-        <button className="btn bp"
-          onClick={()=>startExam({mode,subject,year:mode==="mixed"?mixedYear:null,count,subjects:selectedSubs,perSubject:perSubMap})}
-          disabled={mode==="mixed"&&selectedSubs.length<2}>
-          <I n="play" sz={15} c="#fff"/> Begin Exam
-        </button>
-      )}
+      <button className="btn bp"
+        onClick={()=>startExam({mode,subject,year:mode==="mixed"?mixedYear:null,count,subjects:selectedSubs,perSubject:perSubMap})}
+        disabled={mode==="mixed"&&selectedSubs.length<2}>
+        <I n="play" sz={15} c="#fff"/> Begin Exam
+      </button>
     </div>
   );
 }
@@ -6614,7 +6577,7 @@ function ReviewScreen({questions,answers,setScreen}){
 }
 
 // ─── STATS SCREEN ─────────────────────────────────────────────────────────────
-function StatsScreen({store,loaded,isPremium,onGoPremium}){
+function StatsScreen({store,loaded}){
   const sessions=store?.sessions||[];
   const totalQ=store?.totalQ||0;
   const totalC=store?.totalC||0;
@@ -6672,21 +6635,8 @@ function StatsScreen({store,loaded,isPremium,onGoPremium}){
         </div>
       )}
 
-      {/* Premium gate */}
-      {!isPremium&&(
-        <div className="prem-banner fade-3" onClick={onGoPremium} style={{marginBottom:16}}>
-          <div style={{width:36,height:36,borderRadius:10,background:"var(--bg3)",
-            display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🔒</div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:13,fontWeight:800,fontFamily:"var(--display)",color:"var(--gold)"}}>Unlock Full Analytics</div>
-            <div style={{fontSize:11,color:"var(--text3)",marginTop:1}}>Subject breakdown · weak topics</div>
-          </div>
-          <I n="right" sz={14} c="var(--gold)"/>
-        </div>
-      )}
-
       {/* Subject breakdown */}
-      {isPremium&&Object.keys(subjStats).length>0&&(
+      {Object.keys(subjStats).length>0&&(
         <>
           <div className="lbl fade-3" style={{marginTop:8}}>Subject Performance</div>
           {ALL_SUBJECTS.filter(s=>subjStats[s]).map((s,i)=>{
@@ -6716,7 +6666,7 @@ function StatsScreen({store,loaded,isPremium,onGoPremium}){
       )}
 
       {/* Weak topics */}
-      {isPremium&&weak.length>0&&(
+      {weak.length>0&&(
         <>
           <div className="lbl" style={{marginTop:20}}>Focus Areas</div>
           {weak.map(t=>(
@@ -6775,7 +6725,7 @@ function StatsScreen({store,loaded,isPremium,onGoPremium}){
 }
 
 // ─── SETTINGS SCREEN ──────────────────────────────────────────────────────────
-function SettingsScreen({store,setStore,isPremium,daysLeft,premiumEmail,onGoPremium}){
+function SettingsScreen({store,setStore}){
   const [clearing,setClearing]=useState(false);
   const [done,setDone]=useState(false);
   const [updateStatus,setUpdateStatus]=useState("idle");
@@ -6874,35 +6824,22 @@ function SettingsScreen({store,setStore,isPremium,daysLeft,premiumEmail,onGoPrem
     <div className="screen fade">
       <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Settings</div>
 
-      {/* Subscription */}
-      <div className="lbl fade-1">Subscription</div>
-      {isPremium?(
-        <div className="card-gold fade-1" style={{marginBottom:20}}>
-          <div style={{display:"flex",alignItems:"center",gap:14}}>
-            <div style={{width:46,height:46,borderRadius:14,background:"rgba(245,200,66,.1)",
-              border:"1px solid rgba(245,200,66,.18)",display:"flex",alignItems:"center",
-              justifyContent:"center",fontSize:24,flexShrink:0}}>🐓</div>
-            <div style={{flex:1}}>
-              <div style={{fontSize:14,fontWeight:800,fontFamily:"var(--display)",color:"var(--gold)"}}>Premium Active</div>
-              {premiumEmail&&<div style={{fontSize:11,color:"var(--text3)",marginTop:1,fontFamily:"var(--mono)"}}>{premiumEmail}</div>}
-              <div style={{fontSize:11,color:"var(--text3)",marginTop:2,fontFamily:"var(--mono)"}}>{daysLeft} days remaining</div>
-            </div>
-            <span style={{fontSize:10,fontWeight:800,color:"var(--green)",background:"rgba(94,201,122,.1)",
-              padding:"4px 10px",borderRadius:999,fontFamily:"var(--display)",letterSpacing:".5px",
-              border:"1px solid rgba(94,201,122,.18)"}}>ACTIVE</span>
-          </div>
-        </div>
-      ):(
-        <div className="prem-banner fade-1" style={{marginBottom:20}} onClick={onGoPremium}>
-          <div style={{width:40,height:40,borderRadius:12,background:"rgba(245,200,66,.08)",
-            display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>✦</div>
+      {/* Beta notice */}
+      <div className="lbl fade-1">Access</div>
+      <div className="card fade-1" style={{marginBottom:20}}>
+        <div style={{display:"flex",alignItems:"center",gap:14}}>
+          <div style={{width:46,height:46,borderRadius:14,background:"rgba(94,201,122,.1)",
+            border:"1px solid rgba(94,201,122,.18)",display:"flex",alignItems:"center",
+            justifyContent:"center",fontSize:24,flexShrink:0}}>🐓</div>
           <div style={{flex:1}}>
-            <div style={{fontSize:14,fontWeight:800,fontFamily:"var(--display)",color:"var(--gold)"}}>Go Premium — ₦1,000</div>
-            <div style={{fontSize:11,color:"var(--text3)",marginTop:1}}>400 days · All subjects · Full analytics</div>
+            <div style={{fontSize:14,fontWeight:800,fontFamily:"var(--display)",color:"var(--green)"}}>Free Beta</div>
+            <div style={{fontSize:11,color:"var(--text3)",marginTop:1,fontFamily:"var(--mono)"}}>All features unlocked</div>
           </div>
-          <I n="right" sz={14} c="var(--gold)"/>
+          <span style={{fontSize:10,fontWeight:800,color:"var(--green)",background:"rgba(94,201,122,.1)",
+            padding:"4px 10px",borderRadius:999,fontFamily:"var(--display)",letterSpacing:".5px",
+            border:"1px solid rgba(94,201,122,.18)"}}>OPEN</span>
         </div>
-      )}
+      </div>
 
       {/* Profile */}
       <div className="lbl fade-2">Profile</div>
