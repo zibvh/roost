@@ -1,10 +1,7 @@
 // firebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getFunctions } from "firebase/functions";
 
-// 🔧 Replace these with your actual Firebase project config
-// Firebase Console → Project Settings → Your Apps → Web App
 const firebaseConfig = {
   apiKey: "AIzaSyDQe6XWAXaooIfA9oxwUzeyQWZ7rU3DfgQ",
   authDomain: "rooster-a908b.firebaseapp.com",
@@ -17,4 +14,3 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
-export const functions = getFunctions(app, "us-central1");

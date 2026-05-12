@@ -1,10 +1,25 @@
 // PremiumModal.jsx
 import { useState } from "react";
-import { httpsCallable } from "firebase/functions";
-import { functions } from "./firebaseConfig";
 import { openPaystack } from "./paymentService";
 
-const verifyPayment = httpsCallable(functions, "verifyPayment");
+// ── Replace with your Render/Railway URL once deployed ──────────────────────
+// e.g. "https://rooster-server.onrender.com"  or  "https://rooster-server.up.railway.app"
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
+const APP_SECRET = import.meta.env.VITE_APP_SECRET || "";
+
+async function verifyPaymentOnServer({ email, reference, provider }) {
+  const res = await fetch(`${SERVER_URL}/verify-payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-app-secret": APP_SECRET,
+    },
+    body: JSON.stringify({ email, reference, provider }),
+  });
+  const data = await res.json();
+  if (!res.ok || !data.success) throw new Error(data.message || "Verification failed");
+  return data;
+}
 
 const styles = {
   overlay: {
@@ -79,13 +94,9 @@ export default function PremiumModal({ onClose, onSuccess }) {
   async function handlePaymentSuccess({ reference, provider }) {
     setStatus("verifying"); setError("");
     try {
-      const res = await verifyPayment({ email: email.trim().toLowerCase(), reference, provider });
-      if (res.data?.success) {
-        setStatus("success");
-        onSuccess?.(email.trim().toLowerCase());
-      } else {
-        throw new Error(res.data?.message || "Verification failed");
-      }
+      await verifyPaymentOnServer({ email: email.trim().toLowerCase(), reference, provider });
+      setStatus("success");
+      onSuccess?.(email.trim().toLowerCase());
     } catch (err) {
       setError(err.message || "Could not verify payment. Try again.");
       setStatus("error");
