@@ -4,8 +4,7 @@ import { httpsCallable } from "firebase/functions";
 import { functions } from "./firebaseConfig";
 import { openPaystack } from "./paymentService";
 
-const verifyPayment   = httpsCallable(functions, "verifyPayment");
-const redeemAccessCode = httpsCallable(functions, "redeemAccessCode");
+const verifyPayment = httpsCallable(functions, "verifyPayment");
 
 const styles = {
   overlay: {
@@ -55,27 +54,12 @@ const styles = {
     outline:"none", marginBottom:"16px",
     boxSizing:"border-box", fontFamily:"inherit", transition:"border-color .2s",
   },
-  tabs: { display:"flex", gap:"8px", marginBottom:"20px" },
-  tab: {
-    flex:1, padding:"10px", borderRadius:"8px", border:"1px solid #3a2010",
-    background:"transparent", color:"#8a6040", fontSize:"13px",
-    fontWeight:"600", cursor:"pointer", transition:"all .2s",
-  },
-  tabActive: {
-    background:"rgba(205,133,63,.12)", borderColor:"#cd853f", color:"#f5deb3",
-  },
   btnPaystack: {
     width:"100%", padding:"13px", borderRadius:"8px", border:"none",
     background:"linear-gradient(135deg,#cd853f,#a0522d)",
     color:"#fff8f0", fontSize:"14px", fontWeight:"700",
     cursor:"pointer", display:"flex", alignItems:"center",
     justifyContent:"center", gap:"8px", transition:"opacity .2s",
-  },
-  btnAccess: {
-    width:"100%", padding:"13px", borderRadius:"8px",
-    border:"1px solid #cd853f", background:"transparent",
-    color:"#cd853f", fontSize:"14px", fontWeight:"700",
-    cursor:"pointer", transition:"all .2s",
   },
   errorText:  { color:"#e05a3a", fontSize:"12px", marginTop:"10px", textAlign:"center" },
   loadingText:{ color:"#8a6040", fontSize:"13px", textAlign:"center", padding:"10px 0", fontFamily:"'Courier New',monospace", letterSpacing:"1px" },
@@ -86,37 +70,24 @@ const styles = {
 };
 
 export default function PremiumModal({ onClose, onSuccess }) {
-  const [tab,      setTab]      = useState("pay");   // "pay" | "code"
-  const [email,    setEmail]    = useState("");
-  const [code,     setCode]     = useState("");
-  const [status,   setStatus]   = useState("idle");  // idle | verifying | success | error
-  const [error,    setError]    = useState("");
+  const [email,  setEmail]  = useState("");
+  const [status, setStatus] = useState("idle");  // idle | verifying | success | error
+  const [error,  setError]  = useState("");
 
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const isValidCode  = code.trim().length >= 4;
 
-  // ── Payment flow ──────────────────────────────────────────────────────────
   async function handlePaymentSuccess({ reference, provider }) {
     setStatus("verifying"); setError("");
     try {
       const res = await verifyPayment({ email: email.trim().toLowerCase(), reference, provider });
-      if (res.data?.success) { setStatus("success"); onSuccess?.(email.trim().toLowerCase()); }
-      else throw new Error(res.data?.message || "Verification failed");
+      if (res.data?.success) {
+        setStatus("success");
+        onSuccess?.(email.trim().toLowerCase());
+      } else {
+        throw new Error(res.data?.message || "Verification failed");
+      }
     } catch (err) {
       setError(err.message || "Could not verify payment. Try again.");
-      setStatus("error");
-    }
-  }
-
-  // ── Access code flow ──────────────────────────────────────────────────────
-  async function handleAccessCode() {
-    setStatus("verifying"); setError("");
-    try {
-      const res = await redeemAccessCode({ code: code.trim().toUpperCase() });
-      if (res.data?.success) { setStatus("success"); onSuccess?.(normalizedCode); }
-      else throw new Error(res.data?.message || "Invalid access code");
-    } catch (err) {
-      setError(err.message || "Invalid or already used access code.");
       setStatus("error");
     }
   }
@@ -127,7 +98,7 @@ export default function PremiumModal({ onClose, onSuccess }) {
   }
 
   return (
-    <div style={styles.overlay} onClick={e => e.target===e.currentTarget && handleClose()}>
+    <div style={styles.overlay} onClick={e => e.target === e.currentTarget && handleClose()}>
       <div style={styles.modal}>
         <button style={styles.closeBtn} onClick={handleClose}>✕</button>
 
@@ -164,62 +135,30 @@ export default function PremiumModal({ onClose, onSuccess }) {
 
             <hr style={styles.divider}/>
 
-            {/* Tabs */}
-            <div style={styles.tabs}>
-              <button
-                style={{...styles.tab, ...(tab==="pay" ? styles.tabActive : {})}}
-                onClick={()=>{ setTab("pay"); setError(""); }}>
-                Pay ₦1,000
-              </button>
-              <button
-                style={{...styles.tab, ...(tab==="code" ? styles.tabActive : {})}}
-                onClick={()=>{ setTab("code"); setError(""); }}>
-                Access Code
-              </button>
-            </div>
-
             {status === "verifying" ? (
-              <p style={styles.loadingText}>
-                {tab==="pay" ? "verifying payment..." : "checking code..."}
-              </p>
-            ) : tab === "pay" ? (
+              <p style={styles.loadingText}>verifying payment...</p>
+            ) : (
               <>
                 <label style={styles.label}>Your Email</label>
                 <input
-                  style={{...styles.input, borderColor: email&&!isValidEmail?"#e05a3a":"#3a2010"}}
-                  type="email" placeholder="you@example.com"
-                  value={email} onChange={e=>setEmail(e.target.value)}
-                  onFocus={e=>e.target.style.borderColor="#cd853f"}
-                  onBlur={e=>e.target.style.borderColor="#3a2010"}
+                  style={{...styles.input, borderColor: email && !isValidEmail ? "#e05a3a" : "#3a2010"}}
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  onFocus={e => e.target.style.borderColor = "#cd853f"}
+                  onBlur={e => e.target.style.borderColor = "#3a2010"}
                 />
                 <button
                   style={{...styles.btnPaystack, opacity: isValidEmail ? 1 : 0.4}}
                   disabled={!isValidEmail}
-                  onClick={()=>openPaystack(email.trim(), handlePaymentSuccess, ()=>{})}>
-                  Pay with Paystack
-                </button>
-              </>
-            ) : (
-              <>
-                <label style={styles.label}>Enter Access Code</label>
-                <input
-                  style={styles.input}
-                  type="text" placeholder="e.g. ROOST-XXXX"
-                  value={code}
-                  onChange={e=>setCode(e.target.value.toUpperCase())}
-                  onFocus={e=>e.target.style.borderColor="#cd853f"}
-                  onBlur={e=>e.target.style.borderColor="#3a2010"}
-                />
-                <button
-                  style={{...styles.btnAccess, opacity: isValidCode ? 1 : 0.4}}
-                  disabled={!isValidCode}
-                  onClick={handleAccessCode}>
-                  Unlock with Code
+                  onClick={() => openPaystack(email.trim(), handlePaymentSuccess, () => {})}>
+                  Pay ₦1,000 with Paystack
                 </button>
               </>
             )}
 
-            {(status==="error") && <p style={styles.errorText}>⚠ {error}</p>}
+            {status === "error" && <p style={styles.errorText}>⚠ {error}</p>}
           </>
         )}
       </div>

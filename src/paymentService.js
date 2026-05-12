@@ -1,6 +1,4 @@
-
-
-const AMOUNT_KOBO = 100000; 
+const AMOUNT_KOBO = 100000;
 
 function loadPaystack() {
   return new Promise((resolve, reject) => {
@@ -22,8 +20,7 @@ export async function openPaystack(email, onSuccess, onClose) {
   await loadPaystack();
 
   const handler = window.PaystackPop.setup({
-    // 🔑 Replace with your Paystack public key
-    key: "pk_live_YOUR_PAYSTACK_PUBLIC_KEY",
+    key: "pk_live_8e7dbbb76eeea4b811995e104fd8535a73004cd1",
     email,
     amount: AMOUNT_KOBO,
     currency: "NGN",

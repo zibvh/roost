@@ -7,7 +7,7 @@ const TAGLINE = "JAMB UTME Exam Simulator";
 const VERSION = "2.3.0";
 const UPDATE_CHECK_URL = "https://raw.githubusercontent.com/zibvh/roost/main/public/version.json";
 const JAMB_WEEK = new Date("2026-04-26"); // JAMB UTME 2026 week
-const GITHUB_REPO = "zibvh/roost"; // ← replace with your actual repo
+const GITHUB_REPO = "zibvh/roost";
 const UTME_SECS = 105 * 60;
 const MARKS_TOTAL = 400;
 const SKEY = "rooster_v2";
@@ -5698,7 +5698,7 @@ export default function App(){
   const [showConf,setShowConf]=useState(false);
   const [update,setUpdate]=useState(null);
   const [showPremium,setShowPremium]=useState(false);
-  const {isPremium,premiumEmail,daysLeft,loading:premiumLoading,activatePremium,activateWithCode}=usePremium();
+  const {isPremium,premiumEmail,daysLeft,loading:premiumLoading,activatePremium}=usePremium();
 
   useEffect(()=>{
     loadStore().then(s=>{
@@ -5776,13 +5776,8 @@ export default function App(){
         {showPremium && (
           <PremiumModal
             onClose={()=>setShowPremium(false)}
-            onSuccess={async(identifier)=>{
-              // identifier is email for Paystack, code string for access code
-              if(identifier && identifier.includes("@")){
-                await activatePremium(identifier);
-              } else {
-                await activateWithCode(identifier);
-              }
+            onSuccess={async(email)=>{
+              await activatePremium(email);
               setShowPremium(false);
             }}
           />
