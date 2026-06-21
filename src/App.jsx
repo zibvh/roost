@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const APP = "Rooster";
 const TAGLINE = "JAMB UTME Exam Simulator";
-const VERSION = "2.3.0";
+const VERSION = "3.0.0";
 const UPDATE_CHECK_URL = "https://raw.githubusercontent.com/zibvh/roost/main/public/version.json";
 const JAMB_WEEK = new Date("2026-04-26"); // JAMB UTME 2026 week
 const GITHUB_REPO = "zibvh/roost";
@@ -5567,7 +5567,7 @@ function I({n,sz=20,c="currentColor"}){
 }
 
 // ─── CSS ──────────────────────────────────────────────────────────────────────
-const CSS = `@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500;600&display=swap');
+const CSS = `@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
   --bg:#0c0804;--bg2:#120d09;--bg3:#1a1410;--bg4:#231c16;--bg5:#2d2520;
@@ -5577,7 +5577,7 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400
   --text:#f7f0e8;--text2:#c4b5a5;--text3:#7a6a5a;--text4:#3d3028;
   --border:#1e1710;--border2:#2e2418;--border3:#3d3228;
   --r:20px;--r2:14px;--r3:10px;--r4:6px;
-  --font:'DM Sans',sans-serif;--display:'Syne',sans-serif;--mono:'DM Mono',monospace;
+  --font:'Inter',sans-serif;--display:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
   --cbg:#120d09;--cbo:#2e2418;--obg:#120d09;--obo:#2e2418;
   --navbg:rgba(12,8,4,0.97);
 }
@@ -5871,7 +5871,7 @@ function OnboardingScreen({onDone}){
             border:"1px solid var(--border2)",boxShadow:"0 12px 32px -8px rgba(0,0,0,.5)"}}>
             <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
           </div>
-          <div style={{fontSize:28,fontWeight:800,letterSpacing:-1,fontFamily:"var(--display)",
+          <div style={{fontSize:28,fontWeight:700,letterSpacing:-1,fontFamily:"var(--display)",
             color:"var(--text)",marginBottom:10}}>
             Welcome
           </div>
@@ -5918,7 +5918,7 @@ function Landing({onStart}){
           border:"1px solid var(--border2)",boxShadow:"0 16px 40px -10px rgba(0,0,0,.55)"}}>
           <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
         </div>
-        <div style={{fontSize:44,fontWeight:800,letterSpacing:-1.5,lineHeight:1.05,marginBottom:10,
+        <div style={{fontSize:44,fontWeight:700,letterSpacing:-1.5,lineHeight:1.05,marginBottom:10,
           color:"var(--text)",fontFamily:"var(--display)"}}>
           Rooster
         </div>
@@ -5969,7 +5969,7 @@ function HomeScreen({store,loaded,setScreen,update}){
             textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:4}}>
             {hour<12?"Good morning":hour<17?"Good afternoon":"Good evening"}{userName?", "+userName:""}
           </div>
-          <div style={{fontSize:26,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.5px",lineHeight:1.1}}>
+          <div style={{fontSize:26,fontWeight:700,fontFamily:"var(--display)",letterSpacing:"-0.5px",lineHeight:1.1}}>
             Rooster <span style={{color:"var(--accent)"}}>CBT</span>
           </div>
         </div>
@@ -5984,7 +5984,7 @@ function HomeScreen({store,loaded,setScreen,update}){
           <div style={{flex:1}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
               <I n="download" sz={14} c="var(--green)"/>
-              <div style={{fontSize:13,fontWeight:800,color:"var(--green)",fontFamily:"var(--display)"}}>v{update.version} available</div>
+              <div style={{fontSize:13,fontWeight:700,color:"var(--green)",fontFamily:"var(--display)"}}>v{update.version} available</div>
             </div>
             {update.whatsNew.length>0&&(
               <div style={{marginBottom:10}}>
@@ -6015,7 +6015,7 @@ function HomeScreen({store,loaded,setScreen,update}){
                 <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1px",
                   textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:4}}>Average Score</div>
                 <div style={{display:"flex",alignItems:"baseline",gap:3}}>
-                  <span style={{fontSize:52,fontWeight:800,fontFamily:"var(--display)",lineHeight:1,
+                  <span style={{fontSize:52,fontWeight:700,fontFamily:"var(--display)",lineHeight:1,
                     letterSpacing:"-2px",color:avg>=50?"var(--accent)":"var(--red)"}}>
                     {getScore(totalC,totalQ)}
                   </span>
@@ -6025,7 +6025,7 @@ function HomeScreen({store,loaded,setScreen,update}){
               <div style={{textAlign:"right"}}>
                 <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1px",
                   textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:4}}>Questions</div>
-                <div style={{fontSize:36,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-1px"}}>{totalQ}</div>
+                <div style={{fontSize:36,fontWeight:700,fontFamily:"var(--display)",letterSpacing:"-1px"}}>{totalQ}</div>
               </div>
             </div>
             <div className="prog"><div className="pf" style={{width:`${avg}%`,background:"linear-gradient(90deg,var(--accent),var(--accent2))"}}/></div>
@@ -6053,7 +6053,7 @@ function HomeScreen({store,loaded,setScreen,update}){
           <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1px",
             textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:2}}>Until JAMB</div>
           <div style={{display:"flex",alignItems:"baseline",gap:4}}>
-            <span style={{fontSize:34,fontWeight:800,fontFamily:"var(--display)",
+            <span style={{fontSize:34,fontWeight:700,fontFamily:"var(--display)",
               color:jambColor,letterSpacing:"-1px",lineHeight:1}}>{daysToJamb}</span>
             <span style={{fontSize:13,fontWeight:600,color:"var(--text3)"}}>days</span>
           </div>
@@ -6075,7 +6075,7 @@ function HomeScreen({store,loaded,setScreen,update}){
             display:"flex",alignItems:"center",justifyContent:"center"}}>
             <I n="book" sz={18} c="var(--accent)"/>
           </div>
-          <div style={{fontSize:15,fontWeight:800,fontFamily:"var(--display)"}}>By subject</div>
+          <div style={{fontSize:15,fontWeight:700,fontFamily:"var(--display)"}}>By subject</div>
           <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>Choose a subject and question count</div>
         </div>
         <div className="qa-tile qa-secondary" onClick={()=>setScreen("select")}>
@@ -6083,7 +6083,7 @@ function HomeScreen({store,loaded,setScreen,update}){
             display:"flex",alignItems:"center",justifyContent:"center"}}>
             <I n="chart" sz={18} c="var(--gold)"/>
           </div>
-          <div style={{fontSize:15,fontWeight:800,fontFamily:"var(--display)"}}>Mixed</div>
+          <div style={{fontSize:15,fontWeight:700,fontFamily:"var(--display)"}}>Mixed</div>
           <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>Simulate the real exam, up to 4 subjects</div>
         </div>
       </div>
@@ -6156,7 +6156,7 @@ function SelectScreen({startExam,setScreen}){
         <div>
           <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1.2px",
             textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:2}}>Practice</div>
-          <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px"}}>Set up your session</div>
+          <div style={{fontSize:22,fontWeight:700,fontFamily:"var(--display)",letterSpacing:"-0.3px"}}>Set up your session</div>
         </div>
         <button className="btn-ghost" onClick={()=>setScreen("home")}><I n="x" sz={13}/> Close</button>
       </div>
@@ -6467,7 +6467,7 @@ function ResultScreen({stats,questions,answers,setScreen,userName}){
     <div className="screen fade">
       <div style={{textAlign:"center",marginBottom:24}}>
         <div className="lbl" style={{marginBottom:4}}>Session complete</div>
-        <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)"}}>Here's how you did</div>
+        <div style={{fontSize:22,fontWeight:700,fontFamily:"var(--display)"}}>Here's how you did</div>
       </div>
 
       <div style={{position:"relative",width:130,height:130,margin:"0 auto 24px"}}>
@@ -6536,7 +6536,7 @@ function ReviewScreen({questions,answers,setScreen}){
   return(
     <div className="screen fade">
       <div className="row" style={{marginBottom:16}}>
-        <div style={{fontSize:18,fontWeight:800,fontFamily:"var(--display)"}}>Review answers</div>
+        <div style={{fontSize:18,fontWeight:700,fontFamily:"var(--display)"}}>Review answers</div>
         <button className="btn bg bsm" onClick={()=>setScreen("result")}><I n="left" sz={15}/></button>
       </div>
       <div className="tabs">
@@ -6591,7 +6591,7 @@ function StatsScreen({store,loaded}){
 
   return(
     <div className="screen fade">
-      <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Your progress</div>
+      <div style={{fontSize:22,fontWeight:700,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Your progress</div>
 
       {/* Hero score */}
       <div className="card fade-1" style={{marginBottom:12,textAlign:"center",padding:"24px 20px",
@@ -6599,7 +6599,7 @@ function StatsScreen({store,loaded}){
         <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1.2px",
           textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:8}}>Overall average</div>
         <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,marginBottom:8}}>
-          <span style={{fontSize:60,fontWeight:800,fontFamily:"var(--display)",
+          <span style={{fontSize:60,fontWeight:700,fontFamily:"var(--display)",
             color:avg!==null?(avg>=50?"var(--accent)":"var(--red)"):"var(--text3)",
             lineHeight:1,letterSpacing:"-3px"}}>
             {avg!==null?getScore(totalC,totalQ):"—"}
@@ -6622,15 +6622,15 @@ function StatsScreen({store,loaded}){
       {sessions.length>0&&(
         <div style={{display:"flex",gap:8,marginBottom:16}} className="fade-2">
           <div className="stat-pill">
-            <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)"}}>{sessions.length}</div>
+            <div style={{fontSize:22,fontWeight:700,fontFamily:"var(--display)"}}>{sessions.length}</div>
             <div style={{fontSize:9,color:"var(--text3)",fontFamily:"var(--display)",letterSpacing:".8px",fontWeight:700,textTransform:"uppercase",marginTop:3}}>Sessions</div>
           </div>
           <div className="stat-pill">
-            <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",color:"var(--green)"}}>{sessions.filter(s=>s.pct>=50).length}</div>
+            <div style={{fontSize:22,fontWeight:700,fontFamily:"var(--display)",color:"var(--green)"}}>{sessions.filter(s=>s.pct>=50).length}</div>
             <div style={{fontSize:9,color:"var(--text3)",fontFamily:"var(--display)",letterSpacing:".8px",fontWeight:700,textTransform:"uppercase",marginTop:3}}>Passed</div>
           </div>
           <div className="stat-pill">
-            <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",color:"var(--accent)"}}>{avg!==null?`${avg}%`:"—"}</div>
+            <div style={{fontSize:22,fontWeight:700,fontFamily:"var(--display)",color:"var(--accent)"}}>{avg!==null?`${avg}%`:"—"}</div>
             <div style={{fontSize:9,color:"var(--text3)",fontFamily:"var(--display)",letterSpacing:".8px",fontWeight:700,textTransform:"uppercase",marginTop:3}}>Accuracy</div>
           </div>
         </div>
@@ -6827,7 +6827,7 @@ function SettingsScreen({store,setStore}){
 
   return(
     <div className="screen fade">
-      <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Settings</div>
+      <div style={{fontSize:22,fontWeight:700,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Settings</div>
 
       {/* Profile */}
       <div className="lbl fade-1">Profile</div>
@@ -6879,7 +6879,7 @@ function SettingsScreen({store,setStore}){
         {updateStatus==="available"&&updateInfo&&(
           <div style={{marginBottom:14}}>
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,
-              fontSize:13,fontWeight:800,color:"var(--accent)",fontFamily:"var(--display)"}}>
+              fontSize:13,fontWeight:700,color:"var(--accent)",fontFamily:"var(--display)"}}>
               <I n="zap" sz={14} c="var(--accent)"/>
               v{updateInfo.version} is ready to download
             </div>
