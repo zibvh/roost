@@ -5552,6 +5552,16 @@ function I({n,sz=20,c="currentColor"}){
     sun:<svg {...p}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
     moon:<svg {...p}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
     download:<svg {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+    zap:<svg {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+    share:<svg {...p}><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>,
+    "check-circle":<svg {...p}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+    "alert-circle":<svg {...p}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+    "refresh-cw":<svg {...p}><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>,
+    target:<svg {...p}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>,
+    sparkle:<svg {...p}><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg>,
+    feather:<svg {...p}><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>,
+    user:<svg {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+    mail:<svg {...p}><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/></svg>,
   };
   return icons[n]||null;
 }
@@ -5798,24 +5808,24 @@ async function scheduleStudyReminder(name){
 
     const slots=[
       {id:43, hour:8,  msgs:[
-        `Good morning ${name}! Start the day with 10 questions 🌅`,
-        `Rise and grind ${name} — JAMB won't pass itself 🐓`,
-        `Morning ${name}! A quick practice before the day starts? ☀️`,
+        `Good morning, ${name}. Ten quick questions before the day gets busy?`,
+        `Morning, ${name} — a short practice round sets the tone for the day.`,
+        `Rise and revise, ${name}. JAMB prep starts early.`,
       ]},
       {id:44, hour:12, msgs:[
-        `${name}, take a lunch break with some JAMB questions 📚`,
-        `Midday check-in ${name} — how's the prep going? 💪`,
-        `${name}, 5 minutes of practice at lunch = progress 🎯`,
+        `${name}, a lunch-break round of questions could be worth it.`,
+        `Midday check-in, ${name} — how's the prep going?`,
+        `${name}, five minutes now adds up over time.`,
       ]},
       {id:45, hour:16, msgs:[
-        `${name}, afternoon session time! Keep the streak going 🔥`,
-        `Hey ${name}! Wind down with a quick practice round 📖`,
-        `${name}, the afternoon is perfect for revision 💡`,
+        `${name}, afternoon's a good time for a practice session.`,
+        `Hey ${name}, wind down the day with a quick round.`,
+        `${name}, the afternoon is great for revision.`,
       ]},
       {id:46, hour:18, msgs:[
-        `${name}, evening study session — you've got this! 🌙`,
-        `Don't sleep on it ${name} — one more round before dinner 😅`,
-        `${name}, your JAMB score won't improve itself 😂 Practice now!`,
+        `${name}, an evening session before you wind down?`,
+        `One more round before dinner, ${name}?`,
+        `${name}, your score won't improve on its own — let's practise.`,
       ]},
     ];
 
@@ -5826,7 +5836,7 @@ async function scheduleStudyReminder(name){
       const msg=s.msgs[Math.floor(Math.random()*s.msgs.length)];
       return{
         id:s.id,
-        title:"Rooster CBT 🐓",
+        title:"Rooster CBT",
         body:msg,
         schedule:{every:"day", on:{hour:s.hour, minute:0}},
         sound:null,
@@ -5847,7 +5857,7 @@ function OnboardingScreen({onDone}){
   const [error,setError]=useState("");
 
   function handleDone(){
-    if(!name.trim()){ setError("Please enter your name"); return; }
+    if(!name.trim()){ setError("Enter your name to continue"); return; }
     onDone(name.trim());
   }
 
@@ -5856,22 +5866,23 @@ function OnboardingScreen({onDone}){
       minHeight:"100vh",padding:"32px 24px",background:"var(--bg)"}}>
       <div className="land" style={{width:"100%",maxWidth:380}}>
 
-        <div style={{textAlign:"center",marginBottom:40}}>
-          <img src="/icon-192.png" alt="Rooster" style={{width:72,height:72,borderRadius:22,marginBottom:20,
-            boxShadow:"0 8px 32px rgba(218,119,86,.3)"}}/>
-          <div style={{fontSize:30,fontWeight:900,letterSpacing:-1,
-            background:"linear-gradient(135deg,var(--text) 40%,var(--accent))",
-            WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>
-            Welcome to Rooster
+        <div style={{textAlign:"center",marginBottom:36}}>
+          <div style={{width:64,height:64,borderRadius:20,margin:"0 auto 22px",overflow:"hidden",
+            border:"1px solid var(--border2)",boxShadow:"0 12px 32px -8px rgba(0,0,0,.5)"}}>
+            <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
           </div>
-          <div style={{fontSize:13,color:"var(--text3)",marginTop:8,fontWeight:600,lineHeight:1.6}}>
-            Your JAMB UTME prep companion.<br/>Let's get you set up.
+          <div style={{fontSize:28,fontWeight:800,letterSpacing:-1,fontFamily:"var(--display)",
+            color:"var(--text)",marginBottom:10}}>
+            Welcome
+          </div>
+          <div style={{fontSize:14,color:"var(--text3)",fontWeight:500,lineHeight:1.6,maxWidth:280,margin:"0 auto"}}>
+            Let's set up your JAMB practice space. It only takes a moment.
           </div>
         </div>
 
-        <div style={{marginBottom:8,fontSize:14,fontWeight:700,color:"var(--text2)"}}>What's your name?</div>
-        <div style={{fontSize:12,color:"var(--text3)",marginBottom:14}}>
-          We'll use this to personalise reminders and greetings 🙂
+        <div style={{marginBottom:6,fontSize:14,fontWeight:700,color:"var(--text2)",fontFamily:"var(--display)"}}>What should we call you?</div>
+        <div style={{fontSize:12,color:"var(--text3)",marginBottom:14,lineHeight:1.6}}>
+          Used for your greeting and study reminders.
         </div>
         <input
           value={name}
@@ -5889,7 +5900,7 @@ function OnboardingScreen({onDone}){
         <button className="btn bp" onClick={handleDone}
           style={{width:"100%",marginTop:16,borderRadius:999,fontSize:15,padding:"15px 0",
             boxShadow:"0 8px 24px rgba(218,119,86,.3)"}}>
-          {name.trim()?`Let's go, ${name.trim()}! 🚀`:"Continue"}
+          {name.trim()?`Continue as ${name.trim()}`:"Continue"}
         </button>
 
       </div>
@@ -5903,17 +5914,20 @@ function Landing({onStart}){
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
       minHeight:"100vh",padding:"32px 24px",textAlign:"center",background:"var(--bg)"}}>
       <div className="land" style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-        <img src="/icon-192.png" alt="Rooster" style={{width:80,height:80,borderRadius:24,marginBottom:28,boxShadow:"0 8px 32px rgba(218,119,86,.3)"}}/>
-        <div style={{fontSize:52,fontWeight:900,letterSpacing:-2,lineHeight:1,marginBottom:8,
-          background:"linear-gradient(135deg,var(--text) 40%,var(--accent))",
-          WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",backgroundClip:"text"}}>
+        <div style={{width:84,height:84,borderRadius:24,marginBottom:24,overflow:"hidden",
+          border:"1px solid var(--border2)",boxShadow:"0 16px 40px -10px rgba(0,0,0,.55)"}}>
+          <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+        </div>
+        <div style={{fontSize:44,fontWeight:800,letterSpacing:-1.5,lineHeight:1.05,marginBottom:10,
+          color:"var(--text)",fontFamily:"var(--display)"}}>
           Rooster
         </div>
-        <div style={{fontSize:14,fontWeight:600,color:"var(--text3)",letterSpacing:.5,marginBottom:40}}>
-          JAMB UTME Exam Simulator
+        <div style={{fontSize:14,fontWeight:500,color:"var(--text3)",letterSpacing:.2,marginBottom:36,
+          maxWidth:280,lineHeight:1.6}}>
+          Practice real JAMB UTME questions, at your own pace, on your own schedule.
         </div>
-        <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:8,marginBottom:40,maxWidth:320}}>
-          {["14 Subjects","400+ Questions","2010–2025","Offline"].map(f=>(
+        <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:8,marginBottom:36,maxWidth:320}}>
+          {["14 subjects","400+ questions","2010–2025","Works offline"].map(f=>(
             <span key={f} style={{padding:"6px 14px",borderRadius:999,background:"var(--bg3)",
               border:"1px solid var(--border2)",fontSize:12,fontWeight:700,color:"var(--text2)"}}>
               {f}
@@ -5923,10 +5937,10 @@ function Landing({onStart}){
         <button className="btn bp" style={{maxWidth:280,borderRadius:999,fontSize:16,
           padding:"16px 40px",boxShadow:"0 8px 24px rgba(218,119,86,.35)"}}
           onClick={onStart}>
-          <I n="play" sz={18} c="#fff"/> Start Practising
+          <I n="play" sz={18} c="#fff"/> Start practising
         </button>
-        <div style={{marginTop:40,fontSize:11,color:"var(--text3)",fontWeight:600}}>
-          v{VERSION} · Rooster by frNtcOda
+        <div style={{marginTop:36,fontSize:11,color:"var(--text4)",fontWeight:600,letterSpacing:.3}}>
+          v{VERSION}
         </div>
       </div>
     </div>
@@ -5953,14 +5967,14 @@ function HomeScreen({store,loaded,setScreen,update}){
         <div>
           <div style={{fontSize:11,fontWeight:700,color:"var(--text3)",letterSpacing:"1.2px",
             textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:4}}>
-            {hour<12?"Good Morning":hour<17?"Good Afternoon":"Good Evening"}{userName?" ✦ "+userName:""}
+            {hour<12?"Good morning":hour<17?"Good afternoon":"Good evening"}{userName?", "+userName:""}
           </div>
           <div style={{fontSize:26,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.5px",lineHeight:1.1}}>
             Rooster <span style={{color:"var(--accent)"}}>CBT</span>
           </div>
         </div>
         <div style={{width:44,height:44,borderRadius:14,overflow:"hidden",border:"1.5px solid var(--border2)",flexShrink:0}}>
-          <img src="/icon-192.png" alt="R" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
         </div>
       </div>
 
@@ -5989,20 +6003,6 @@ function HomeScreen({store,loaded,setScreen,update}){
           </div>
         </div>
       )}
-
-      {/* Beta badge */}
-      <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",
-        borderRadius:12,background:"rgba(94,201,122,.07)",
-        border:"1px solid rgba(94,201,122,.18)",marginBottom:16}} className="fade-1">
-        <span style={{fontSize:16}}>🐓</span>
-        <div style={{flex:1}}>
-          <div style={{fontSize:11,fontWeight:800,color:"var(--green)",fontFamily:"var(--display)",letterSpacing:".5px"}}>FREE BETA</div>
-          <div style={{fontSize:11,color:"var(--text3)",marginTop:1,fontFamily:"var(--mono)"}}>All features unlocked</div>
-        </div>
-        <span style={{fontSize:10,fontWeight:700,color:"var(--green)",background:"rgba(94,201,122,.1)",
-          padding:"2px 8px",borderRadius:999,fontFamily:"var(--display)",letterSpacing:".5px",
-          border:"1px solid rgba(94,201,122,.2)"}}>OPEN</span>
-      </div>
 
       {/* Score card */}
       <div className="card fade-2" style={{marginBottom:14,padding:"20px 18px"}}>
@@ -6035,9 +6035,12 @@ function HomeScreen({store,loaded,setScreen,update}){
           </>
         ):(
           <div style={{textAlign:"center",padding:"14px 0"}}>
-            <div style={{fontSize:32,marginBottom:6}}>🎯</div>
+            <div style={{width:44,height:44,borderRadius:12,background:"var(--bg3)",margin:"0 auto 10px",
+              display:"flex",alignItems:"center",justifyContent:"center"}}>
+              <I n="target" sz={20} c="var(--text3)"/>
+            </div>
             <div style={{fontSize:14,fontWeight:700,fontFamily:"var(--display)",color:"var(--text2)",marginBottom:3}}>No sessions yet</div>
-            <div style={{fontSize:12,color:"var(--text3)"}}>Start practising to track your score</div>
+            <div style={{fontSize:12,color:"var(--text3)"}}>Start practising to see your average here</div>
           </div>
         )}
       </div>
@@ -6048,14 +6051,14 @@ function HomeScreen({store,loaded,setScreen,update}){
         background:`linear-gradient(135deg,rgba(0,0,0,0),var(--bg2))`}}>
         <div>
           <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1px",
-            textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:2}}>JAMB Countdown</div>
+            textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:2}}>Until JAMB</div>
           <div style={{display:"flex",alignItems:"baseline",gap:4}}>
             <span style={{fontSize:34,fontWeight:800,fontFamily:"var(--display)",
               color:jambColor,letterSpacing:"-1px",lineHeight:1}}>{daysToJamb}</span>
             <span style={{fontSize:13,fontWeight:600,color:"var(--text3)"}}>days</span>
           </div>
           <div style={{fontSize:11,color:"var(--text3)",marginTop:3}}>
-            {daysToJamb<=0?"Exam day! All the best 🎉":daysToJamb<=30?"Final stretch — keep grinding 🔥":daysToJamb<=90?"Stay consistent 💪":"Start strong 🚀"}
+            {daysToJamb<=0?"Exam day. You've got this.":daysToJamb<=30?"Final stretch — keep at it":daysToJamb<=90?"Steady practice adds up":"Plenty of time to build momentum"}
           </div>
         </div>
         <div style={{width:44,height:44,borderRadius:12,background:"var(--bg3)",
@@ -6065,15 +6068,15 @@ function HomeScreen({store,loaded,setScreen,update}){
       </div>
 
       {/* Quick start */}
-      <div className="lbl fade-4" style={{marginTop:20,marginBottom:10}}>Quick Start</div>
+      <div className="lbl fade-4" style={{marginTop:20,marginBottom:10}}>Quick start</div>
       <div className="qa-grid fade-4">
         <div className="qa-tile qa-primary" onClick={()=>setScreen("select")}>
           <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,124,69,.15)",
             display:"flex",alignItems:"center",justifyContent:"center"}}>
             <I n="book" sz={18} c="var(--accent)"/>
           </div>
-          <div style={{fontSize:15,fontWeight:800,fontFamily:"var(--display)"}}>Subjects</div>
-          <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>Pick subject & questions</div>
+          <div style={{fontSize:15,fontWeight:800,fontFamily:"var(--display)"}}>By subject</div>
+          <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>Choose a subject and question count</div>
         </div>
         <div className="qa-tile qa-secondary" onClick={()=>setScreen("select")}>
           <div style={{width:36,height:36,borderRadius:10,background:"rgba(245,200,66,.12)",
@@ -6081,7 +6084,7 @@ function HomeScreen({store,loaded,setScreen,update}){
             <I n="chart" sz={18} c="var(--gold)"/>
           </div>
           <div style={{fontSize:15,fontWeight:800,fontFamily:"var(--display)"}}>Mixed</div>
-          <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>4 subjects + year filter</div>
+          <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>Simulate the real exam, up to 4 subjects</div>
         </div>
       </div>
 
@@ -6153,13 +6156,13 @@ function SelectScreen({startExam,setScreen}){
         <div>
           <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1.2px",
             textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:2}}>Practice</div>
-          <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px"}}>Configure Exam</div>
+          <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px"}}>Set up your session</div>
         </div>
-        <button className="btn-ghost" onClick={()=>setScreen("home")}>✕ Close</button>
+        <button className="btn-ghost" onClick={()=>setScreen("home")}><I n="x" sz={13}/> Close</button>
       </div>
 
       <div className="tabs" style={{marginBottom:22}}>
-        {[{id:"subject",l:"By Subject"},{id:"mixed",l:"Mixed Mode"}].map(m=>(
+        {[{id:"subject",l:"By subject"},{id:"mixed",l:"Mixed mode"}].map(m=>(
           <button key={m.id} className={`tab${mode===m.id?" on":""}`} onClick={()=>setMode(m.id)}>{m.l}</button>
         ))}
       </div>
@@ -6207,14 +6210,14 @@ function SelectScreen({startExam,setScreen}){
 
       {mode==="mixed"&&(
         <>
-          <div className="lbl">Quick Cluster</div>
+          <div className="lbl">Quick cluster</div>
           <div style={{display:"flex",gap:8,marginBottom:16,flexWrap:"wrap"}}>
             {Object.keys(CLUSTERS).map(c=>(
               <button key={c} className={`chip${cluster===c?" on":""}`} onClick={()=>pickCluster(c)}>{c}</button>
             ))}
           </div>
 
-          <div className="lbl">Your Subjects <span style={{color:"var(--accent)",fontFamily:"var(--mono)",fontWeight:800}}>{selectedSubs.length}/4</span></div>
+          <div className="lbl">Your subjects <span style={{color:"var(--accent)",fontFamily:"var(--mono)",fontWeight:800}}>{selectedSubs.length}/4</span></div>
           <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:8}}>
             {ALL_SUBJECTS.map(s=>{
               const on=selectedSubs.includes(s);
@@ -6232,9 +6235,9 @@ function SelectScreen({startExam,setScreen}){
               );
             })}
           </div>
-          <div style={{fontSize:11,color:"var(--text3)",marginBottom:20,fontFamily:"var(--mono)"}}>Tap to select · max 4 · drops oldest</div>
+          <div style={{fontSize:11,color:"var(--text3)",marginBottom:20,fontFamily:"var(--mono)"}}>Tap to choose up to 4 — picking a 5th drops the oldest</div>
 
-          <div className="lbl">Year Filter</div>
+          <div className="lbl">Year filter</div>
           <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:20}}>
             <button className={`yp${!mixedYear?" on":""}`} onClick={()=>setMixedYear(null)}>All</button>
             {YEARS.map(y=><button key={y} className={`yp${mixedYear===y?" on":""}`} onClick={()=>setMixedYear(y)}>{y}</button>)}
@@ -6253,7 +6256,7 @@ function SelectScreen({startExam,setScreen}){
       <button className="btn bp"
         onClick={()=>startExam({mode,subject,year:mode==="mixed"?mixedYear:null,count,subjects:selectedSubs,perSubject:perSubMap})}
         disabled={mode==="mixed"&&selectedSubs.length<2}>
-        <I n="play" sz={15} c="#fff"/> Begin Exam
+        <I n="play" sz={15} c="#fff"/> Start session
       </button>
     </div>
   );
@@ -6288,7 +6291,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
       {showPal&&(
         <div className="overlay">
           <div className="row" style={{marginBottom:14}}>
-            <div style={{fontWeight:700,fontSize:16}}>Question Palette</div>
+            <div style={{fontWeight:700,fontSize:16,fontFamily:"var(--display)"}}>Question palette</div>
             <button className="btn bg bsm" onClick={()=>setShowPal(false)}><I n="x" sz={15}/></button>
           </div>
           <div style={{display:"flex",gap:16,marginBottom:12,fontSize:11,fontWeight:700}}>
@@ -6328,7 +6331,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
               <span>Flagged: <strong style={{color:"var(--text)"}}>{flagged.size}</strong></span>
               <span>Left: <strong style={{color:"var(--text)"}}>{questions.length-answered}</strong></span>
             </div>
-            <button className="btn bd" onClick={()=>{setShowPal(false);setShowConf(true);}}>Submit Exam</button>
+            <button className="btn bd" onClick={()=>{setShowPal(false);setShowConf(true);}}>Submit exam</button>
           </div>
         </div>
       )}
@@ -6336,17 +6339,17 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
       {showConf&&(
         <div className="overlay" style={{justifyContent:"center",alignItems:"center"}}>
           <div className="card" style={{width:"100%"}}>
-            <div style={{fontWeight:700,fontSize:17,marginBottom:10}}>Submit Examination?</div>
+            <div style={{fontWeight:700,fontSize:17,marginBottom:10,fontFamily:"var(--display)"}}>Ready to submit?</div>
             <div style={{color:"var(--text2)",fontSize:14,lineHeight:1.7,marginBottom:6}}>
-              You have answered <strong>{answered}</strong> of <strong>{questions.length}</strong> questions.
+              You've answered <strong>{answered}</strong> of <strong>{questions.length}</strong> questions.
             </div>
             {questions.length-answered>0&&(
               <div style={{fontSize:13,color:"var(--amber)",marginBottom:14}}>
-                {questions.length-answered} question{questions.length-answered>1?"s":""} unanswered.
+                {questions.length-answered} question{questions.length-answered>1?"s":""} still unanswered.
               </div>
             )}
             <div style={{display:"flex",gap:10,marginTop:4}}>
-              <button className="btn bg" onClick={()=>setShowConf(false)}>Cancel</button>
+              <button className="btn bg" onClick={()=>setShowConf(false)}>Keep going</button>
               <button className="btn bp" onClick={()=>onSubmit(false)}>Submit</button>
             </div>
           </div>
@@ -6442,16 +6445,16 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
 // ─── RESULT SCREEN ────────────────────────────────────────────────────────────
 function ResultScreen({stats,questions,answers,setScreen,userName}){
   const {correct,total,bySubject,score,pct:p}=stats;
-  const grade=p>=70?"Excellent":p>=50?"Good":p>=40?"Fair":"Needs Work";
+  const grade=p>=70?"Excellent":p>=50?"Good":p>=40?"Fair":"Keep practising";
   const gc=p>=70?"var(--green)":p>=50?"var(--accent)":p>=40?"var(--amber)":"var(--red)";
   const r=52,C=2*Math.PI*r;
   const [shared,setShared]=useState(false);
 
   async function handleShare(){
-    const text=`📊 ${userName||"I"} just scored ${score}/400 (${p}%) on Rooster CBT!\n🐓 JAMB UTME Simulator — practice smarter.\n\nGet the app: https://getrooster.onrender.com`;
+    const text=`${userName||"I"} just scored ${score}/400 (${p}%) on Rooster CBT — a JAMB UTME practice app.\n\nGet the app: https://getrooster.onrender.com`;
     try{
       if(navigator.share){
-        await navigator.share({title:"My Rooster Result",text});
+        await navigator.share({title:"My Rooster result",text});
       } else {
         await navigator.clipboard.writeText(text);
         setShared(true);
@@ -6463,8 +6466,8 @@ function ResultScreen({stats,questions,answers,setScreen,userName}){
   return(
     <div className="screen fade">
       <div style={{textAlign:"center",marginBottom:24}}>
-        <div className="lbl" style={{marginBottom:4}}>Exam Complete</div>
-        <div style={{fontSize:22,fontWeight:800}}>Your Results</div>
+        <div className="lbl" style={{marginBottom:4}}>Session complete</div>
+        <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)"}}>Here's how you did</div>
       </div>
 
       <div style={{position:"relative",width:130,height:130,margin:"0 auto 24px"}}>
@@ -6491,7 +6494,7 @@ function ResultScreen({stats,questions,answers,setScreen,userName}){
 
       {Object.keys(bySubject).length>1&&(
         <>
-          <div className="lbl">By Subject</div>
+          <div className="lbl">By subject</div>
           {Object.entries(bySubject).map(([sub,d])=>{
             const sp=pct(d.correct,d.total);
             return(
@@ -6509,12 +6512,12 @@ function ResultScreen({stats,questions,answers,setScreen,userName}){
       )}
 
       <div style={{display:"flex",flexDirection:"column",gap:10,marginTop:20}}>
-        <button className="btn bp" onClick={()=>setScreen("review")}><I n="book" sz={15} c="#fff"/> Review Answers</button>
+        <button className="btn bp" onClick={()=>setScreen("review")}><I n="book" sz={15} c="#fff"/> Review answers</button>
         <button className="btn bg" onClick={handleShare}>
           <I n={shared?"check":"share"} sz={15} c={shared?"var(--green)":undefined}/>
-          {shared?"Copied to clipboard!":"Share Result"}
+          {shared?"Copied to clipboard":"Share result"}
         </button>
-        <button className="btn bg" onClick={()=>setScreen("select")}>Try Again</button>
+        <button className="btn bg" onClick={()=>setScreen("select")}>Try again</button>
         <button className="btn bg" onClick={()=>setScreen("home")}><I n="home" sz={15}/> Home</button>
       </div>
     </div>
@@ -6533,7 +6536,7 @@ function ReviewScreen({questions,answers,setScreen}){
   return(
     <div className="screen fade">
       <div className="row" style={{marginBottom:16}}>
-        <div style={{fontSize:18,fontWeight:800}}>Review Answers</div>
+        <div style={{fontSize:18,fontWeight:800,fontFamily:"var(--display)"}}>Review answers</div>
         <button className="btn bg bsm" onClick={()=>setScreen("result")}><I n="left" sz={15}/></button>
       </div>
       <div className="tabs">
@@ -6541,7 +6544,7 @@ function ReviewScreen({questions,answers,setScreen}){
           <button key={t.id} className={`tab ${filter===t.id?"on":""}`} onClick={()=>setFilter(t.id)}>{t.l}</button>
         ))}
       </div>
-      {list.length===0&&<div className="empty"><I n="check" sz={30} c="var(--text3)"/><p>No questions in this category.</p></div>}
+      {list.length===0&&<div className="empty"><I n="check" sz={30} c="var(--text3)"/><p>Nothing to show here.</p></div>}
       {list.map(q=>{
         const chosen=answers[q.id],correct=chosen===q.a;
         return(
@@ -6588,13 +6591,13 @@ function StatsScreen({store,loaded}){
 
   return(
     <div className="screen fade">
-      <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Statistics</div>
+      <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Your progress</div>
 
       {/* Hero score */}
       <div className="card fade-1" style={{marginBottom:12,textAlign:"center",padding:"24px 20px",
         background:"linear-gradient(135deg,rgba(255,124,69,.05),var(--bg2))"}}>
         <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1.2px",
-          textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:8}}>Overall Average</div>
+          textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:8}}>Overall average</div>
         <div style={{display:"flex",alignItems:"baseline",justifyContent:"center",gap:4,marginBottom:8}}>
           <span style={{fontSize:60,fontWeight:800,fontFamily:"var(--display)",
             color:avg!==null?(avg>=50?"var(--accent)":"var(--red)"):"var(--text3)",
@@ -6636,7 +6639,7 @@ function StatsScreen({store,loaded}){
       {/* Subject breakdown */}
       {Object.keys(subjStats).length>0&&(
         <>
-          <div className="lbl fade-3" style={{marginTop:8}}>Subject Performance</div>
+          <div className="lbl fade-3" style={{marginTop:8}}>By subject</div>
           {ALL_SUBJECTS.filter(s=>subjStats[s]).map((s,i)=>{
             const d=subjStats[s]; const sp=pct(d.correct,d.total);
             const color=SC[s]||"var(--accent)";
@@ -6666,7 +6669,7 @@ function StatsScreen({store,loaded}){
       {/* Weak topics */}
       {weak.length>0&&(
         <>
-          <div className="lbl" style={{marginTop:20}}>Focus Areas</div>
+          <div className="lbl" style={{marginTop:20}}>Worth revisiting</div>
           {weak.map(t=>(
             <div key={t.topic+t.subject} className="card sess-fail" style={{marginBottom:8,display:"flex",alignItems:"center",gap:12}}>
               <div style={{width:42,height:42,borderRadius:10,flexShrink:0,
@@ -6686,11 +6689,15 @@ function StatsScreen({store,loaded}){
       )}
 
       {/* Session history */}
-      <div className="lbl" style={{marginTop:20}}>Session History</div>
+      <div className="lbl" style={{marginTop:20}}>Session history</div>
       {sessions.length===0?(
-        <div style={{textAlign:"center",padding:"28px 0",color:"var(--text3)"}}>
-          <div style={{fontSize:32,marginBottom:8}}>📊</div>
+        <div style={{textAlign:"center",padding:"32px 0",color:"var(--text3)"}}>
+          <div style={{width:44,height:44,borderRadius:12,background:"var(--bg3)",margin:"0 auto 10px",
+            display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <I n="chart" sz={20} c="var(--text3)"/>
+          </div>
           <div style={{fontSize:13,fontFamily:"var(--display)",fontWeight:700,color:"var(--text3)"}}>No sessions yet</div>
+          <div style={{fontSize:12,color:"var(--text4)",marginTop:4}}>Your practice history will show up here</div>
         </div>
       ):sessions.map(s=>{
         const col=s.pct>=70?"var(--green)":s.pct>=50?"var(--amber)":"var(--red)";
@@ -6811,39 +6818,22 @@ function SettingsScreen({store,setStore}){
   const rows=[
     {l:"App",v:`Rooster — JAMB UTME Simulator`},
     {l:"Version",v:VERSION},
-    {l:"Years Covered",v:"2010 – 2025"},
+    {l:"Years covered",v:"2010 – 2025"},
     {l:"Subjects",v:`${ALL_SUBJECTS.length} subjects`},
-    {l:"Question Bank",v:`${QB.length} questions`},
-    {l:"Exam Duration",v:"105 minutes"},
-    {l:"Sessions Stored",v:String(count)},
+    {l:"Question bank",v:`${QB.length} questions`},
+    {l:"Exam duration",v:"105 minutes"},
+    {l:"Sessions stored",v:String(count)},
   ];
 
   return(
     <div className="screen fade">
       <div style={{fontSize:22,fontWeight:800,fontFamily:"var(--display)",letterSpacing:"-0.3px",marginBottom:22}}>Settings</div>
 
-      {/* Beta notice */}
-      <div className="lbl fade-1">Access</div>
-      <div className="card fade-1" style={{marginBottom:20}}>
-        <div style={{display:"flex",alignItems:"center",gap:14}}>
-          <div style={{width:46,height:46,borderRadius:14,background:"rgba(94,201,122,.1)",
-            border:"1px solid rgba(94,201,122,.18)",display:"flex",alignItems:"center",
-            justifyContent:"center",fontSize:24,flexShrink:0}}>🐓</div>
-          <div style={{flex:1}}>
-            <div style={{fontSize:14,fontWeight:800,fontFamily:"var(--display)",color:"var(--green)"}}>Free Beta</div>
-            <div style={{fontSize:11,color:"var(--text3)",marginTop:1,fontFamily:"var(--mono)"}}>All features unlocked</div>
-          </div>
-          <span style={{fontSize:10,fontWeight:800,color:"var(--green)",background:"rgba(94,201,122,.1)",
-            padding:"4px 10px",borderRadius:999,fontFamily:"var(--display)",letterSpacing:".5px",
-            border:"1px solid rgba(94,201,122,.18)"}}>OPEN</span>
-        </div>
-      </div>
-
       {/* Profile */}
-      <div className="lbl fade-2">Profile</div>
-      <div className="card fade-2" style={{marginBottom:20}}>
+      <div className="lbl fade-1">Profile</div>
+      <div className="card fade-1" style={{marginBottom:20}}>
         <div style={{fontSize:11,color:"var(--text3)",fontWeight:700,marginBottom:8,
-          fontFamily:"var(--display)",letterSpacing:".5px",textTransform:"uppercase"}}>Your Name</div>
+          fontFamily:"var(--display)",letterSpacing:".5px",textTransform:"uppercase"}}>Your name</div>
         <input value={nameVal} onChange={e=>setNameVal(e.target.value)}
           placeholder="Enter your name"
           style={{width:"100%",padding:"12px 14px",borderRadius:12,
@@ -6851,21 +6841,22 @@ function SettingsScreen({store,setStore}){
             fontSize:14,fontWeight:600,color:"var(--text)",outline:"none",
             boxSizing:"border-box",fontFamily:"var(--font)",marginBottom:12}}/>
         {profileSaved?(
-          <div style={{padding:"10px 14px",borderRadius:10,background:"rgba(94,201,122,.07)",
-            color:"var(--green)",fontSize:13,fontWeight:700,textAlign:"center",
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,
+            padding:"10px 14px",borderRadius:10,background:"rgba(94,201,122,.07)",
+            color:"var(--green)",fontSize:13,fontWeight:700,
             border:"1px solid rgba(94,201,122,.15)",fontFamily:"var(--display)"}}>
-            ✓ Saved
+            <I n="check" sz={13} c="var(--green)"/> Saved
           </div>
         ):(
           <button className="btn bp bsm" onClick={handleSaveProfile}>
-            <I n="check" sz={13} c="#fff"/> Save Profile
+            <I n="check" sz={13} c="#fff"/> Save profile
           </button>
         )}
       </div>
 
       {/* App Info */}
-      <div className="lbl fade-3">App Info</div>
-      <div className="card fade-3" style={{marginBottom:20}}>
+      <div className="lbl fade-2">App info</div>
+      <div className="card fade-2" style={{marginBottom:20}}>
         {rows.map((row,i)=>(
           <div key={row.l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
             padding:"12px 0",borderBottom:i<rows.length-1?"1px solid var(--border2)":"none"}}>
@@ -6876,13 +6867,13 @@ function SettingsScreen({store,setStore}){
       </div>
 
       {/* Updates */}
-      <div className="lbl fade-4">Updates</div>
-      <div className="card fade-4" style={{marginBottom:20}}>
+      <div className="lbl fade-3">Updates</div>
+      <div className="card fade-3" style={{marginBottom:20}}>
         {updateStatus==="uptodate"&&(
           <div style={{display:"flex",alignItems:"center",gap:8,paddingBottom:14,
             fontSize:13,fontWeight:700,color:"var(--green)",fontFamily:"var(--display)"}}>
             <I n="check-circle" sz={15} c="var(--green)"/>
-            You're on the latest (v{VERSION})
+            You're up to date (v{VERSION})
           </div>
         )}
         {updateStatus==="available"&&updateInfo&&(
@@ -6890,7 +6881,7 @@ function SettingsScreen({store,setStore}){
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8,
               fontSize:13,fontWeight:800,color:"var(--accent)",fontFamily:"var(--display)"}}>
               <I n="zap" sz={14} c="var(--accent)"/>
-              v{updateInfo.version} available!
+              v{updateInfo.version} is ready to download
             </div>
             {updateInfo.whatsNew?.length>0&&(
               <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.9,marginBottom:4,fontFamily:"var(--mono)"}}>
@@ -6908,7 +6899,7 @@ function SettingsScreen({store,setStore}){
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10,
               fontSize:13,fontWeight:700,color:"var(--red)",fontFamily:"var(--display)"}}>
               <I n="alert-circle" sz={14} c="var(--red)"/>
-              Couldn't reach update server
+              Couldn't reach the update server
             </div>
             <div style={{background:"var(--bg3)",borderRadius:10,padding:10}}>
               {debugLog.map((line,i)=>(
@@ -6928,33 +6919,35 @@ function SettingsScreen({store,setStore}){
         )}
         <button className="btn bg" onClick={handleCheckUpdate} disabled={updateStatus==="checking"}>
           <I n="refresh-cw" sz={14} c="var(--text2)"/>
-          {updateStatus==="checking"?"Checking…":updateStatus==="available"?"Re-check":"Check for Update"}
+          {updateStatus==="checking"?"Checking…":updateStatus==="available"?"Check again":"Check for updates"}
         </button>
       </div>
 
-      {/* Data */}
-      <div className="lbl fade-5">Data</div>
-      <div className="card fade-5">
-        <div style={{fontSize:12,color:"var(--text3)",lineHeight:1.8,marginBottom:16,fontFamily:"var(--mono)"}}>
-          frntcoda@gmail.com
+      {/* Contact */}
+      <div className="lbl fade-4">Contact</div>
+      <div className="card fade-4" style={{marginBottom:20}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,fontSize:12,color:"var(--text2)",
+          marginBottom:16,fontFamily:"var(--mono)"}}>
+          <I n="mail" sz={13} c="var(--text3)"/> frntcoda@gmail.com
         </div>
         {done?(
-          <div style={{padding:"12px 16px",borderRadius:12,background:"rgba(94,201,122,.07)",
-            color:"var(--green)",fontSize:13,fontWeight:700,textAlign:"center",
+          <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,
+            padding:"12px 16px",borderRadius:12,background:"rgba(94,201,122,.07)",
+            color:"var(--green)",fontSize:13,fontWeight:700,
             border:"1px solid rgba(94,201,122,.15)",fontFamily:"var(--display)"}}>
-            All history cleared ✓
+            <I n="check" sz={13} c="var(--green)"/> History cleared
           </div>
         ):(
           <button className="btn bd" onClick={handleClear} disabled={clearing||count===0}>
             <I n="trash" sz={14} c="var(--red)"/>
-            {clearing?"Clearing…":count===0?"No Data to Clear":"Clear All History"}
+            {clearing?"Clearing…":count===0?"No history to clear":"Clear all history"}
           </button>
         )}
       </div>
 
       <div style={{textAlign:"center",padding:"28px 0 8px",fontSize:11,color:"var(--text4)",
         fontFamily:"var(--mono)",letterSpacing:".5px"}}>
-        Rooster v{VERSION} by frNtcOda
+        Rooster v{VERSION}
       </div>
     </div>
   );
