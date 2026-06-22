@@ -5576,101 +5576,101 @@ const CSS = `@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk
   --green:#5ec97a;--amber:#f0a44a;--red:#f05454;
   --text:#f7f0e8;--text2:#c4b5a5;--text3:#7a6a5a;--text4:#3d3028;
   --border:#1e1710;--border2:#2e2418;--border3:#3d3228;
-  --r:20px;--r2:14px;--r3:10px;--r4:6px;
+  --r:12px;--r2:10px;--r3:8px;--r4:6px;
   --font:'Inter',sans-serif;--display:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
   --cbg:#120d09;--cbo:#2e2418;--obg:#120d09;--obo:#2e2418;
   --navbg:rgba(12,8,4,0.97);
 }
 body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;}
 ::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:var(--border3);border-radius:999px;}
+::-webkit-scrollbar-thumb{background:var(--border3);border-radius:2px;}
 .app{max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative;}
 .screen{flex:1;padding:20px 18px 100px;overflow-y:auto;}
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--navbg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border2);display:flex;justify-content:space-around;padding:8px 8px 20px;z-index:100;}
-.nb{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:var(--text3);cursor:pointer;transition:all .2s;padding:6px 14px;border-radius:12px;position:relative;}
+.nb{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:var(--text3);cursor:pointer;transition:all .2s;padding:6px 14px;border-radius:6px;position:relative;}
 .nb.on{color:var(--accent);}
-.nb.on::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:32px;height:2px;background:var(--accent);border-radius:0 0 4px 4px;box-shadow:0 0 10px var(--accent-glow);}
+.nb.on::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:2px;background:var(--accent);}
 .nb span{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;font-family:var(--display);}
 .card{background:var(--cbg);border:1px solid var(--cbo);border-radius:var(--r);padding:18px;}
-.card-acc{background:linear-gradient(135deg,rgba(255,124,69,.07),rgba(224,90,40,.03));border:1px solid rgba(255,124,69,.2);border-radius:var(--r);padding:18px;}
-.card-gold{background:linear-gradient(135deg,rgba(245,200,66,.06),rgba(245,200,66,.02));border:1px solid rgba(245,200,66,.18);border-radius:var(--r);padding:18px;}
-.update-banner{background:linear-gradient(135deg,rgba(94,201,122,.09),rgba(255,124,69,.06));border:1px solid rgba(94,201,122,.22);border-radius:var(--r2);padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 20px;border-radius:999px;border:none;font-family:var(--display);font-weight:700;font-size:15px;cursor:pointer;transition:all .18s;width:100%;letter-spacing:.2px;}
+.card-acc{background:var(--cbg);border:1px solid var(--cbo);border-left:2px solid var(--accent);border-radius:var(--r);padding:18px;}
+.card-gold{background:var(--cbg);border:1px solid var(--cbo);border-left:2px solid var(--gold);border-radius:var(--r);padding:18px;}
+.update-banner{background:var(--cbg);border:1px solid var(--cbo);border-left:2px solid var(--green);border-radius:var(--r2);padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 20px;border-radius:var(--r3);border:none;font-family:var(--display);font-weight:700;font-size:15px;cursor:pointer;transition:all .15s;width:100%;letter-spacing:.2px;}
 .btn:disabled{opacity:.3;cursor:not-allowed;}
-.bp{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 8px 24px -6px var(--accent-glow);}
-.bp:active:not(:disabled){transform:scale(.97);box-shadow:0 4px 12px -4px var(--accent-glow);}
+.bp{background:var(--accent);color:#0c0804;}
+.bp:active:not(:disabled){transform:translateY(1px);background:var(--accent2);}
 .bg{background:var(--bg3);color:var(--text2);border:1px solid var(--border2);}
 .bg:active{background:var(--bg4);}
-.bd{background:rgba(240,84,84,.08);color:var(--red);border:1px solid rgba(240,84,84,.2);}
-.bsm{padding:8px 16px;font-size:12px;border-radius:999px;width:auto;}
-.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:999px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:var(--font);font-weight:600;font-size:13px;cursor:pointer;transition:all .15s;}
+.bd{background:transparent;color:var(--red);border:1px solid var(--red);}
+.bsm{padding:8px 16px;font-size:12px;border-radius:var(--r4);width:auto;}
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border-radius:var(--r4);border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:var(--font);font-weight:600;font-size:13px;cursor:pointer;transition:all .15s;}
 .btn-ghost:active{background:var(--bg3);}
-.bdg{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;font-family:var(--display);letter-spacing:.3px;}
-.deasy{background:rgba(94,201,122,.12);color:var(--green);}
-.dmed{background:rgba(240,164,74,.12);color:var(--amber);}
-.dhard{background:rgba(240,84,84,.12);color:var(--red);}
-.bok{background:rgba(94,201,122,.12);color:var(--green);}
-.bfail{background:rgba(240,84,84,.12);color:var(--red);}
-.bwarn{background:rgba(240,164,74,.12);color:var(--amber);}
-.prog{height:3px;border-radius:999px;background:var(--bg4);overflow:hidden;}
-.pf{height:100%;border-radius:999px;transition:width .5s cubic-bezier(.22,1,.36,1);}
-.tmr{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:999px;padding:7px 16px;font-family:var(--mono);font-weight:600;font-size:14px;}
-.tw{border-color:rgba(240,164,74,.35);color:var(--amber);}
-.tc{border-color:rgba(240,84,84,.35);color:var(--red);animation:pulse .8s infinite;}
+.bdg{display:inline-flex;align-items:center;padding:3px 9px;border-radius:4px;font-size:11px;font-weight:700;font-family:var(--display);letter-spacing:.3px;border:1px solid transparent;}
+.deasy{background:transparent;color:var(--green);border-color:rgba(94,201,122,.4);}
+.dmed{background:transparent;color:var(--amber);border-color:rgba(240,164,74,.4);}
+.dhard{background:transparent;color:var(--red);border-color:rgba(240,84,84,.4);}
+.bok{background:transparent;color:var(--green);border-color:rgba(94,201,122,.4);}
+.bfail{background:transparent;color:var(--red);border-color:rgba(240,84,84,.4);}
+.bwarn{background:transparent;color:var(--amber);border-color:rgba(240,164,74,.4);}
+.prog{height:3px;border-radius:2px;background:var(--bg4);overflow:hidden;}
+.pf{height:100%;border-radius:2px;transition:width .5s cubic-bezier(.22,1,.36,1);}
+.tmr{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r4);padding:7px 16px;font-family:var(--mono);font-weight:600;font-size:14px;}
+.tw{border-color:rgba(240,164,74,.5);color:var(--amber);}
+.tc{border-color:rgba(240,84,84,.5);color:var(--red);animation:pulse .8s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.opt{display:flex;align-items:flex-start;gap:12px;padding:16px;border-radius:var(--r2);border:1.5px solid var(--obo);background:var(--obg);cursor:pointer;transition:all .15s;margin-bottom:10px;}
-.opt:active{transform:scale(.99);}
-.osel{border-color:var(--accent)!important;background:rgba(255,124,69,.06)!important;}
-.ocor{border-color:var(--green)!important;background:rgba(94,201,122,.06)!important;}
-.owrng{border-color:var(--red)!important;background:rgba(240,84,84,.06)!important;}
-.okey{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;color:var(--text2);transition:all .15s;font-family:var(--display);}
-.osel .okey{border-color:var(--accent);background:var(--accent);color:#fff;}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:16px;border-radius:var(--r3);border:1px solid var(--obo);background:var(--obg);cursor:pointer;transition:all .15s;margin-bottom:10px;}
+.opt:active{transform:translateY(1px);}
+.osel{border-color:var(--accent)!important;background:rgba(255,124,69,.05)!important;}
+.ocor{border-color:var(--green)!important;background:rgba(94,201,122,.05)!important;}
+.owrng{border-color:var(--red)!important;background:rgba(240,84,84,.05)!important;}
+.okey{width:28px;height:28px;border-radius:4px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;color:var(--text2);transition:all .15s;font-family:var(--mono);}
+.osel .okey{border-color:var(--accent);background:var(--accent);color:#0c0804;}
 .ocor .okey{border-color:var(--green);background:var(--green);color:#0c0804;}
-.owrng .okey{border-color:var(--red);background:var(--red);color:#fff;}
+.owrng .okey{border-color:var(--red);background:var(--red);color:#0c0804;}
 .pg{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin:10px 0;}
-.pb{aspect-ratio:1;border-radius:8px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all .12s;background:var(--bg3);color:var(--text3);font-family:var(--mono);}
-.pb.pa{background:rgba(255,124,69,.18);color:var(--accent);}
-.pb.pf2{background:rgba(240,164,74,.15);color:var(--amber);}
-.pb.pc{outline:2px solid var(--accent);outline-offset:1px;color:var(--text);}
-.chip{background:var(--bg3);border:1px solid var(--border2);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
-.chip.on{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 4px 14px -4px var(--accent-glow);}
-.chip:active{transform:scale(.94);}
-.tabs{display:flex;background:var(--bg3);border-radius:999px;padding:4px;gap:3px;margin-bottom:20px;}
-.tab{flex:1;padding:9px 4px;border:none;background:none;color:var(--text3);font-family:var(--display);font-size:12px;font-weight:700;border-radius:999px;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
-.tab.on{background:var(--accent);color:#fff;box-shadow:0 4px 14px -4px var(--accent-glow);}
-.expl{background:rgba(255,124,69,.04);border:1px solid rgba(255,124,69,.15);border-radius:var(--r2);padding:14px;margin-top:12px;}
-.yp{padding:7px 12px;border-radius:var(--r3);border:none;background:var(--bg3);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--mono);}
-.yp.on{background:var(--accent);color:#fff;box-shadow:0 2px 10px -2px var(--accent-glow);}
+.pb{aspect-ratio:1;border-radius:3px;border:1px solid var(--border2);font-size:11px;font-weight:700;cursor:pointer;transition:all .12s;background:var(--bg3);color:var(--text3);font-family:var(--mono);}
+.pb.pa{background:rgba(255,124,69,.16);color:var(--accent);border-color:rgba(255,124,69,.3);}
+.pb.pf2{background:rgba(240,164,74,.14);color:var(--amber);border-color:rgba(240,164,74,.3);}
+.pb.pc{outline:1.5px solid var(--accent);outline-offset:1px;color:var(--text);}
+.chip{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r4);padding:7px 16px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.chip.on{background:var(--accent);color:#0c0804;border-color:var(--accent);}
+.chip:active{transform:translateY(1px);}
+.tabs{display:flex;background:var(--bg3);border-radius:var(--r3);padding:3px;gap:3px;margin-bottom:20px;}
+.tab{flex:1;padding:9px 4px;border:none;background:none;color:var(--text3);font-family:var(--display);font-size:12px;font-weight:700;border-radius:var(--r4);cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.tab.on{background:var(--accent);color:#0c0804;}
+.expl{background:var(--bg2);border:1px solid var(--border2);border-left:2px solid var(--accent);border-radius:var(--r2);padding:14px;margin-top:12px;}
+.yp{padding:7px 12px;border-radius:var(--r4);border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--mono);}
+.yp.on{background:var(--accent);color:#0c0804;border-color:var(--accent);}
 .yp:active{opacity:.85;}
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-.sc{border-radius:var(--r);padding:16px;cursor:pointer;border:2px solid transparent;transition:all .15s;}
-.sc:active{transform:scale(.97);}
-.sc.on{transform:scale(.98);}
+.sc{border-radius:var(--r);padding:16px;cursor:pointer;border:1px solid transparent;transition:all .15s;}
+.sc:active{transform:translateY(1px);}
+.sc.on{transform:translateY(1px);}
 .mc{background:var(--cbg);border:1px solid var(--cbo);border-radius:var(--r2);padding:16px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:14px;margin-bottom:10px;}
-.mc:active{background:var(--bg3);transform:scale(.99);}
+.mc:active{background:var(--bg3);transform:translateY(1px);}
 .sub-break{border-radius:var(--r2);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.overlay{position:absolute;inset:0;background:rgba(12,8,4,.95);z-index:200;display:flex;flex-direction:column;padding:20px;overflow-y:auto;}
+.overlay{position:absolute;inset:0;background:rgba(12,8,4,.97);z-index:200;display:flex;flex-direction:column;padding:20px;overflow-y:auto;}
 .lbl{font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--text3);text-transform:uppercase;margin-bottom:12px;font-family:var(--display);}
 .row{display:flex;justify-content:space-between;align-items:center;}
 .empty{text-align:center;padding:56px 24px;color:var(--text3);}
 .empty p{margin-top:10px;font-size:14px;line-height:1.7;}
-.tgl{width:46px;height:26px;border-radius:999px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
-.tgl.on{background:var(--accent);}
-.tgl.off{background:var(--border2);}
-.tgl-dot{position:absolute;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;}
-.tgl.on .tgl-dot{left:23px;}
-.tgl.off .tgl-dot{left:3px;}
+.tgl{width:42px;height:24px;border-radius:3px;border:1px solid var(--border2);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;}
+.tgl.on{background:var(--accent);border-color:var(--accent);}
+.tgl.off{background:var(--bg3);}
+.tgl-dot{position:absolute;top:2px;width:18px;height:18px;border-radius:2px;background:#0c0804;transition:left .2s;}
+.tgl.on .tgl-dot{left:22px;}
+.tgl.off .tgl-dot{left:2px;}
 .footer{text-align:center;padding:16px 16px 8px;font-size:11px;color:var(--text3);font-weight:600;letter-spacing:.3px;}
-.stat-pill{display:flex;flex-direction:column;align-items:center;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:12px 8px;flex:1;}
-.sess-card{display:flex;align-items:center;gap:12px;background:var(--cbg);border:1px solid var(--cbo);border-radius:var(--r2);padding:14px;margin-bottom:8px;border-left:3px solid transparent;}
+.stat-pill{display:flex;flex-direction:column;align-items:center;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:12px 8px;flex:1;}
+.sess-card{display:flex;align-items:center;gap:12px;background:var(--cbg);border:1px solid var(--cbo);border-radius:var(--r2);padding:14px;margin-bottom:8px;border-left:2px solid transparent;}
 .sess-pass{border-left-color:var(--green);}
 .sess-fail{border-left-color:var(--red);}
 .sess-fair{border-left-color:var(--amber);}
 .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
-.qa-tile{border-radius:var(--r);padding:18px 16px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:8px;border:1px solid var(--border2);background:var(--bg2);position:relative;overflow:hidden;}
-.qa-tile:active{transform:scale(.97);}
-.qa-primary{background:linear-gradient(135deg,rgba(255,124,69,.1),rgba(224,90,40,.05));border-color:rgba(255,124,69,.22);}
-.qa-secondary{background:linear-gradient(135deg,rgba(245,200,66,.07),rgba(245,200,66,.02));border-color:rgba(245,200,66,.18);}
+.qa-tile{border-radius:var(--r2);padding:18px 16px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:8px;border:1px solid var(--border2);background:var(--bg2);position:relative;overflow:hidden;}
+.qa-tile:active{transform:translateY(1px);}
+.qa-primary{background:var(--bg2);border-color:var(--border2);border-top:2px solid var(--accent);}
+.qa-secondary{background:var(--bg2);border-color:var(--border2);border-top:2px solid var(--gold);}
 .countdown-strip{border-radius:var(--r2);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;background:var(--bg2);border:1px solid var(--border2);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .fade{animation:fadeUp .28s cubic-bezier(.22,1,.36,1) forwards;}
@@ -5867,8 +5867,8 @@ function OnboardingScreen({onDone}){
       <div className="land" style={{width:"100%",maxWidth:380}}>
 
         <div style={{textAlign:"center",marginBottom:36}}>
-          <div style={{width:64,height:64,borderRadius:20,margin:"0 auto 22px",overflow:"hidden",
-            border:"1px solid var(--border2)",boxShadow:"0 12px 32px -8px rgba(0,0,0,.5)"}}>
+          <div style={{width:60,height:60,borderRadius:12,margin:"0 auto 22px",overflow:"hidden",
+            border:"1px solid var(--border2)"}}>
             <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
           </div>
           <div style={{fontSize:28,fontWeight:700,letterSpacing:-1,fontFamily:"var(--display)",
@@ -5891,15 +5891,14 @@ function OnboardingScreen({onDone}){
           placeholder="e.g. Teniola"
           autoFocus
           style={{width:"100%",padding:"14px 16px",borderRadius:"var(--r3)",
-            background:"var(--bg3)",border:`1.5px solid ${error?"var(--red)":"var(--border2)"}`,
+            background:"var(--bg3)",border:`1px solid ${error?"var(--red)":"var(--border2)"}`,
             fontSize:16,fontWeight:600,color:"var(--text)",outline:"none",
             boxSizing:"border-box",fontFamily:"inherit",marginBottom:6}}
         />
         {error && <div style={{fontSize:12,color:"var(--red)",marginBottom:8,fontWeight:600}}>{error}</div>}
 
         <button className="btn bp" onClick={handleDone}
-          style={{width:"100%",marginTop:16,borderRadius:999,fontSize:15,padding:"15px 0",
-            boxShadow:"0 8px 24px rgba(218,119,86,.3)"}}>
+          style={{width:"100%",marginTop:16,fontSize:15,padding:"15px 0"}}>
           {name.trim()?`Continue as ${name.trim()}`:"Continue"}
         </button>
 
@@ -5914,8 +5913,8 @@ function Landing({onStart}){
     <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
       minHeight:"100vh",padding:"32px 24px",textAlign:"center",background:"var(--bg)"}}>
       <div className="land" style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-        <div style={{width:84,height:84,borderRadius:24,marginBottom:24,overflow:"hidden",
-          border:"1px solid var(--border2)",boxShadow:"0 16px 40px -10px rgba(0,0,0,.55)"}}>
+        <div style={{width:76,height:76,borderRadius:12,marginBottom:24,overflow:"hidden",
+          border:"1px solid var(--border2)"}}>
           <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
         </div>
         <div style={{fontSize:44,fontWeight:700,letterSpacing:-1.5,lineHeight:1.05,marginBottom:10,
@@ -5928,16 +5927,15 @@ function Landing({onStart}){
         </div>
         <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:8,marginBottom:36,maxWidth:320}}>
           {["14 subjects","400+ questions","2010–2025","Works offline"].map(f=>(
-            <span key={f} style={{padding:"6px 14px",borderRadius:999,background:"var(--bg3)",
+            <span key={f} style={{padding:"6px 12px",borderRadius:4,background:"var(--bg3)",
               border:"1px solid var(--border2)",fontSize:12,fontWeight:700,color:"var(--text2)"}}>
               {f}
             </span>
           ))}
         </div>
-        <button className="btn bp" style={{maxWidth:280,borderRadius:999,fontSize:16,
-          padding:"16px 40px",boxShadow:"0 8px 24px rgba(218,119,86,.35)"}}
+        <button className="btn bp" style={{maxWidth:280,fontSize:16,padding:"16px 40px"}}
           onClick={onStart}>
-          <I n="play" sz={18} c="#fff"/> Start practising
+          <I n="play" sz={18} c="#0c0804"/> Start practising
         </button>
         <div style={{marginTop:36,fontSize:11,color:"var(--text4)",fontWeight:600,letterSpacing:.3}}>
           v{VERSION}
@@ -5973,7 +5971,7 @@ function HomeScreen({store,loaded,setScreen,update}){
             Rooster <span style={{color:"var(--accent)"}}>CBT</span>
           </div>
         </div>
-        <div style={{width:44,height:44,borderRadius:14,overflow:"hidden",border:"1.5px solid var(--border2)",flexShrink:0}}>
+        <div style={{width:42,height:42,borderRadius:10,overflow:"hidden",border:"1px solid var(--border2)",flexShrink:0}}>
           <img src="/icon-192.png" alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
         </div>
       </div>
@@ -5998,7 +5996,7 @@ function HomeScreen({store,loaded,setScreen,update}){
             )}
             <button className="btn bp bsm" style={{width:"auto"}}
               onClick={()=>window.open(update.apkUrl,"_blank")}>
-              <I n="download" sz={12} c="#fff"/> Download
+              <I n="download" sz={12} c="#0c0804"/> Download
             </button>
           </div>
         </div>
@@ -6028,16 +6026,16 @@ function HomeScreen({store,loaded,setScreen,update}){
                 <div style={{fontSize:36,fontWeight:700,fontFamily:"var(--display)",letterSpacing:"-1px"}}>{totalQ}</div>
               </div>
             </div>
-            <div className="prog"><div className="pf" style={{width:`${avg}%`,background:"linear-gradient(90deg,var(--accent),var(--accent2))"}}/></div>
+            <div className="prog"><div className="pf" style={{width:`${avg}%`,background:"var(--accent)"}}/></div>
             <div style={{fontSize:11,color:"var(--text3)",marginTop:8,fontFamily:"var(--mono)"}}>
               {sessions.length} session{sessions.length!==1?"s":""} · {totalC} correct
             </div>
           </>
         ):(
           <div style={{textAlign:"center",padding:"14px 0"}}>
-            <div style={{width:44,height:44,borderRadius:12,background:"var(--bg3)",margin:"0 auto 10px",
+            <div style={{width:40,height:40,borderRadius:8,border:"1px solid var(--border2)",margin:"0 auto 10px",
               display:"flex",alignItems:"center",justifyContent:"center"}}>
-              <I n="target" sz={20} c="var(--text3)"/>
+              <I n="target" sz={18} c="var(--text3)"/>
             </div>
             <div style={{fontSize:14,fontWeight:700,fontFamily:"var(--display)",color:"var(--text2)",marginBottom:3}}>No sessions yet</div>
             <div style={{fontSize:12,color:"var(--text3)"}}>Start practising to see your average here</div>
@@ -6046,9 +6044,7 @@ function HomeScreen({store,loaded,setScreen,update}){
       </div>
 
       {/* Countdown */}
-      <div className="countdown-strip fade-3" style={{
-        borderColor:`color-mix(in srgb,${jambColor} 20%,transparent)`,
-        background:`linear-gradient(135deg,rgba(0,0,0,0),var(--bg2))`}}>
+      <div className="countdown-strip fade-3" style={{borderLeft:`2px solid ${jambColor}`}}>
         <div>
           <div style={{fontSize:10,fontWeight:700,color:"var(--text3)",letterSpacing:"1px",
             textTransform:"uppercase",fontFamily:"var(--display)",marginBottom:2}}>Until JAMB</div>
@@ -6061,28 +6057,19 @@ function HomeScreen({store,loaded,setScreen,update}){
             {daysToJamb<=0?"Exam day. You've got this.":daysToJamb<=30?"Final stretch — keep at it":daysToJamb<=90?"Steady practice adds up":"Plenty of time to build momentum"}
           </div>
         </div>
-        <div style={{width:44,height:44,borderRadius:12,background:"var(--bg3)",
-          border:"1px solid var(--border2)",display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <I n="clock" sz={20} c={jambColor}/>
-        </div>
+        <I n="clock" sz={22} c={jambColor}/>
       </div>
 
       {/* Quick start */}
       <div className="lbl fade-4" style={{marginTop:20,marginBottom:10}}>Quick start</div>
       <div className="qa-grid fade-4">
         <div className="qa-tile qa-primary" onClick={()=>setScreen("select")}>
-          <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,124,69,.15)",
-            display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <I n="book" sz={18} c="var(--accent)"/>
-          </div>
+          <I n="book" sz={20} c="var(--accent)"/>
           <div style={{fontSize:15,fontWeight:700,fontFamily:"var(--display)"}}>By subject</div>
           <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>Choose a subject and question count</div>
         </div>
         <div className="qa-tile qa-secondary" onClick={()=>setScreen("select")}>
-          <div style={{width:36,height:36,borderRadius:10,background:"rgba(245,200,66,.12)",
-            display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <I n="chart" sz={18} c="var(--gold)"/>
-          </div>
+          <I n="chart" sz={20} c="var(--gold)"/>
           <div style={{fontSize:15,fontWeight:700,fontFamily:"var(--display)"}}>Mixed</div>
           <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.4}}>Simulate the real exam, up to 4 subjects</div>
         </div>
@@ -6097,8 +6084,9 @@ function HomeScreen({store,loaded,setScreen,update}){
             const cls=s.pct>=70?"sess-pass":s.pct>=50?"sess-fair":"sess-fail";
             return(
               <div key={s.id} className={`sess-card ${cls}`}>
-                <div style={{width:42,height:42,borderRadius:10,flexShrink:0,
-                  background:`color-mix(in srgb,${col} 10%,transparent)`,
+                <div style={{width:40,height:40,borderRadius:8,flexShrink:0,
+                  background:`color-mix(in srgb,${col} 8%,transparent)`,
+                  border:`1px solid color-mix(in srgb,${col} 35%,transparent)`,
                   display:"flex",alignItems:"center",justifyContent:"center",
                   fontFamily:"var(--mono)",fontWeight:800,fontSize:13,color:col}}>
                   {s.score}
@@ -6177,12 +6165,11 @@ function SelectScreen({startExam,setScreen}){
               return(
                 <button key={s}
                   onClick={()=>pickSubject(s)}
-                  style={{padding:"8px 14px",borderRadius:999,border:"none",
+                  style={{padding:"8px 14px",borderRadius:6,border:`1px solid ${active?color:"var(--border2)"}`,
                     background:active?color:"var(--bg3)",
-                    color:active?"#fff":"var(--text2)",
-                    fontSize:12,fontWeight:700,cursor:"pointer",transition:"all .18s",
-                    fontFamily:"var(--display)",
-                    boxShadow:active?`0 4px 16px -4px ${color}80`:"none"}}>
+                    color:active?"#0c0804":"var(--text2)",
+                    fontSize:12,fontWeight:700,cursor:"pointer",transition:"all .15s",
+                    fontFamily:"var(--display)"}}>
                   {s}
                 </button>
               );
@@ -6224,12 +6211,11 @@ function SelectScreen({startExam,setScreen}){
               const color=SC[s]||"var(--accent)";
               return(
                 <button key={s} onClick={()=>toggleSub(s)}
-                  style={{padding:"8px 14px",borderRadius:999,border:"none",
+                  style={{padding:"8px 14px",borderRadius:6,border:`1px solid ${on?color:"var(--border2)"}`,
                     background:on?color:"var(--bg3)",
-                    color:on?"#fff":"var(--text2)",
-                    fontSize:12,fontWeight:700,cursor:"pointer",transition:"all .18s",
-                    fontFamily:"var(--display)",
-                    boxShadow:on?`0 4px 14px -4px ${color}70`:"none"}}>
+                    color:on?"#0c0804":"var(--text2)",
+                    fontSize:12,fontWeight:700,cursor:"pointer",transition:"all .15s",
+                    fontFamily:"var(--display)"}}>
                   {s}
                 </button>
               );
@@ -6256,7 +6242,7 @@ function SelectScreen({startExam,setScreen}){
       <button className="btn bp"
         onClick={()=>startExam({mode,subject,year:mode==="mixed"?mixedYear:null,count,subjects:selectedSubs,perSubject:perSubMap})}
         disabled={mode==="mixed"&&selectedSubs.length<2}>
-        <I n="play" sz={15} c="#fff"/> Start session
+        <I n="play" sz={15} c="#0c0804"/> Start session
       </button>
     </div>
   );
@@ -6375,10 +6361,10 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
           </div>
         </div>
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-          <span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:999,color:SC[q.s]||"var(--accent)",background:(SC[q.s]||"var(--accent)")+"14"}}>{q.s}</span>
-          <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:999,color:"var(--text3)",background:"var(--bg3)"}}>{q.t}</span>
+          <span style={{fontSize:11,fontWeight:700,padding:"2px 8px",borderRadius:4,color:SC[q.s]||"var(--accent)",border:`1px solid ${(SC[q.s]||"var(--accent)")+"50"}`}}>{q.s}</span>
+          <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:4,color:"var(--text3)",border:"1px solid var(--border2)"}}>{q.t}</span>
           <span className={`bdg ${diffCls}`}>{q.d}</span>
-          <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:999,color:"var(--text3)",background:"var(--bg3)",fontFamily:"var(--mono)"}}>{q.y}</span>
+          <span style={{fontSize:11,fontWeight:600,padding:"2px 8px",borderRadius:4,color:"var(--text3)",border:"1px solid var(--border2)",fontFamily:"var(--mono)"}}>{q.y}</span>
         </div>
       </div>
 
@@ -6431,7 +6417,7 @@ function ExamScreen({questions,currentQ,setCurrentQ,answers,setAnswers,flagged,s
           </button>
           {currentQ<questions.length-1?(
             <button className="btn bp" style={{flex:1}} onClick={()=>setCurrentQ(c=>c+1)}>
-              Next <I n="right" sz={15} c="#fff"/>
+              Next <I n="right" sz={15} c="#0c0804"/>
             </button>
           ):(
             <button className="btn bd" style={{flex:1}} onClick={()=>setShowConf(true)}>Submit</button>
@@ -6512,7 +6498,7 @@ function ResultScreen({stats,questions,answers,setScreen,userName}){
       )}
 
       <div style={{display:"flex",flexDirection:"column",gap:10,marginTop:20}}>
-        <button className="btn bp" onClick={()=>setScreen("review")}><I n="book" sz={15} c="#fff"/> Review answers</button>
+        <button className="btn bp" onClick={()=>setScreen("review")}><I n="book" sz={15} c="#0c0804"/> Review answers</button>
         <button className="btn bg" onClick={handleShare}>
           <I n={shared?"check":"share"} sz={15} c={shared?"var(--green)":undefined}/>
           {shared?"Copied to clipboard":"Share result"}
@@ -6612,7 +6598,7 @@ function StatsScreen({store,loaded}){
         {avg!==null&&(
           <div style={{marginTop:14}}>
             <div className="prog" style={{height:4}}>
-              <div className="pf" style={{width:`${avg}%`,background:avg>=50?"linear-gradient(90deg,var(--accent),var(--accent2))":"linear-gradient(90deg,var(--red),#c03030)"}}/>
+              <div className="pf" style={{width:`${avg}%`,background:avg>=50?"var(--accent)":"var(--red)"}}/>
             </div>
           </div>
         )}
@@ -6645,13 +6631,13 @@ function StatsScreen({store,loaded}){
             const color=SC[s]||"var(--accent)";
             const statusColor=sp>=70?"var(--green)":sp>=50?"var(--amber)":"var(--red)";
             return(
-              <div key={s} className="card" style={{marginBottom:10,borderLeft:`3px solid ${color}`}}>
+              <div key={s} className="card" style={{marginBottom:10,borderLeft:`2px solid ${color}`}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
                   <div style={{fontWeight:700,fontSize:14,fontFamily:"var(--display)"}}>{s}</div>
                   <div style={{display:"flex",alignItems:"center",gap:8}}>
                     <span style={{fontFamily:"var(--mono)",fontWeight:800,color:color,fontSize:15}}>{sp}%</span>
-                    <span style={{fontSize:10,fontWeight:700,color:statusColor,background:`color-mix(in srgb,${statusColor} 12%,transparent)`,
-                      padding:"2px 8px",borderRadius:999,fontFamily:"var(--display)",letterSpacing:".3px"}}>
+                    <span style={{fontSize:10,fontWeight:700,color:statusColor,border:`1px solid color-mix(in srgb,${statusColor} 40%,transparent)`,
+                      padding:"2px 8px",borderRadius:4,fontFamily:"var(--display)",letterSpacing:".3px"}}>
                       {sp>=70?"Strong":sp>=50?"OK":"Focus"}
                     </span>
                   </div>
@@ -6672,8 +6658,8 @@ function StatsScreen({store,loaded}){
           <div className="lbl" style={{marginTop:20}}>Worth revisiting</div>
           {weak.map(t=>(
             <div key={t.topic+t.subject} className="card sess-fail" style={{marginBottom:8,display:"flex",alignItems:"center",gap:12}}>
-              <div style={{width:42,height:42,borderRadius:10,flexShrink:0,
-                background:"rgba(240,84,84,.08)",display:"flex",alignItems:"center",
+              <div style={{width:40,height:40,borderRadius:8,flexShrink:0,
+                background:"transparent",border:"1px solid rgba(240,84,84,.4)",display:"flex",alignItems:"center",
                 justifyContent:"center",fontFamily:"var(--mono)",fontWeight:800,fontSize:12,color:"var(--red)"}}>
                 {t.score}%
               </div>
@@ -6692,9 +6678,9 @@ function StatsScreen({store,loaded}){
       <div className="lbl" style={{marginTop:20}}>Session history</div>
       {sessions.length===0?(
         <div style={{textAlign:"center",padding:"32px 0",color:"var(--text3)"}}>
-          <div style={{width:44,height:44,borderRadius:12,background:"var(--bg3)",margin:"0 auto 10px",
+          <div style={{width:40,height:40,borderRadius:8,border:"1px solid var(--border2)",margin:"0 auto 10px",
             display:"flex",alignItems:"center",justifyContent:"center"}}>
-            <I n="chart" sz={20} c="var(--text3)"/>
+            <I n="chart" sz={18} c="var(--text3)"/>
           </div>
           <div style={{fontSize:13,fontFamily:"var(--display)",fontWeight:700,color:"var(--text3)"}}>No sessions yet</div>
           <div style={{fontSize:12,color:"var(--text4)",marginTop:4}}>Your practice history will show up here</div>
@@ -6704,8 +6690,9 @@ function StatsScreen({store,loaded}){
         const cls=s.pct>=70?"sess-pass":s.pct>=50?"sess-fair":"sess-fail";
         return(
           <div key={s.id} className={`sess-card ${cls}`}>
-            <div style={{width:42,height:42,borderRadius:10,flexShrink:0,
-              background:`color-mix(in srgb,${col} 10%,transparent)`,
+            <div style={{width:40,height:40,borderRadius:8,flexShrink:0,
+              background:`color-mix(in srgb,${col} 8%,transparent)`,
+              border:`1px solid color-mix(in srgb,${col} 35%,transparent)`,
               display:"flex",alignItems:"center",justifyContent:"center",
               fontFamily:"var(--mono)",fontWeight:800,fontSize:12,color:col}}>
               {s.score}
@@ -6836,20 +6823,20 @@ function SettingsScreen({store,setStore}){
           fontFamily:"var(--display)",letterSpacing:".5px",textTransform:"uppercase"}}>Your name</div>
         <input value={nameVal} onChange={e=>setNameVal(e.target.value)}
           placeholder="Enter your name"
-          style={{width:"100%",padding:"12px 14px",borderRadius:12,
-            background:"var(--bg3)",border:"1.5px solid var(--border2)",
+          style={{width:"100%",padding:"12px 14px",borderRadius:"var(--r3)",
+            background:"var(--bg3)",border:"1px solid var(--border2)",
             fontSize:14,fontWeight:600,color:"var(--text)",outline:"none",
             boxSizing:"border-box",fontFamily:"var(--font)",marginBottom:12}}/>
         {profileSaved?(
           <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,
-            padding:"10px 14px",borderRadius:10,background:"rgba(94,201,122,.07)",
+            padding:"10px 14px",borderRadius:"var(--r4)",background:"var(--bg2)",
             color:"var(--green)",fontSize:13,fontWeight:700,
             border:"1px solid rgba(94,201,122,.15)",fontFamily:"var(--display)"}}>
             <I n="check" sz={13} c="var(--green)"/> Saved
           </div>
         ):(
           <button className="btn bp bsm" onClick={handleSaveProfile}>
-            <I n="check" sz={13} c="#fff"/> Save profile
+            <I n="check" sz={13} c="#0c0804"/> Save profile
           </button>
         )}
       </div>
@@ -6901,7 +6888,7 @@ function SettingsScreen({store,setStore}){
               <I n="alert-circle" sz={14} c="var(--red)"/>
               Couldn't reach the update server
             </div>
-            <div style={{background:"var(--bg3)",borderRadius:10,padding:10}}>
+            <div style={{background:"var(--bg3)",borderRadius:"var(--r4)",padding:10}}>
               {debugLog.map((line,i)=>(
                 <div key={i} style={{fontSize:10,fontFamily:"var(--mono)",color:"var(--text3)",
                   lineHeight:1.9,wordBreak:"break-all"}}>{line}</div>
@@ -6913,7 +6900,7 @@ function SettingsScreen({store,setStore}){
           <a href={updateInfo.apkUrl} target="_blank" rel="noopener noreferrer"
             style={{textDecoration:"none",display:"block",marginBottom:10}}>
             <button className="btn bp">
-              <I n="download" sz={14} c="#fff"/> Download v{updateInfo.version}
+              <I n="download" sz={14} c="#0c0804"/> Download v{updateInfo.version}
             </button>
           </a>
         )}
@@ -6932,7 +6919,7 @@ function SettingsScreen({store,setStore}){
         </div>
         {done?(
           <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,
-            padding:"12px 16px",borderRadius:12,background:"rgba(94,201,122,.07)",
+            padding:"12px 16px",borderRadius:"var(--r4)",background:"var(--bg2)",
             color:"var(--green)",fontSize:13,fontWeight:700,
             border:"1px solid rgba(94,201,122,.15)",fontFamily:"var(--display)"}}>
             <I n="check" sz={13} c="var(--green)"/> History cleared
