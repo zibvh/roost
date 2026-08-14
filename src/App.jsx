@@ -2,16 +2,16 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const APP = "Rooster";
 const TAGLINE = "JAMB UTME Exam Simulator";
-const VERSION = "3.0.0";
+const VERSION = "4.0.0";
 const UPDATE_CHECK_URL = "https://raw.githubusercontent.com/zibvh/roost/main/public/version.json";
-const JAMB_WEEK = new Date("2026-04-26"); // JAMB UTME 2026 week
+const JAMB_WEEK = new Date("2027-04-26")
 const GITHUB_REPO = "zibvh/roost";
 const UTME_SECS = 105 * 60;
 const MARKS_TOTAL = 400;
 const SKEY = "rooster_v2";
 const YEARS = Array.from({length:16},(_,i)=>2010+i);
 
-// Subject colours
+
 const SC = {
   "Use of English":   "#a855f7",
   "Mathematics":      "#06b6d4",
@@ -38,11 +38,10 @@ const CLUSTERS = {
 
 const ALL_SUBJECTS = Object.keys(SC);
 
-// ─── QUESTION BANK ────────────────────────────────────────────────────────────
+
 const QB = [
   {id:"ac001",s:"Accounting",y:2010,t:"Financial Accounting",d:"Easy",q:"The accounting equation is",o:{A:"Assets = Capital + Liabilities",B:"Liabilities = Assets + Capital",C:"Capital = Assets + Liabilities",D:"Assets = Capital - Liabilities"},a:"A",e:"Fundamental equation: Assets = Capital + Liabilities."},
-  // CHEMISTRY (c101 to c700) - YEARS 2010 to 2025
-  // YEAR 2025 (c701 to c740)
+
 {id:"c701",s:"Chemistry",y:2025,t:"Atomic Structure",d:"Easy",q:"The number of neutrons in an atom of ⁷⁵As (Z=33) is",o:{A:"33",B:"42",C:"75",D:"108"},a:"B",e:"Neutrons = 75 - 33 = 42."},
 {id:"c702",s:"Chemistry",y:2025,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of aluminium (Z=13) is",o:{A:"2,8,3",B:"2,8,2",C:"2,8,4",D:"2,8,5"},a:"A",e:"Al: 1s²2s²2p⁶3s²3p¹ → 2,8,3."},
 {id:"c703",s:"Chemistry",y:2025,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the N shell of rubidium (Z=37) is",o:{A:"8",B:"18",C:"32",D:"1"},a:"B",e:"Rb: [Kr]5s¹; N shell (n=4) has 18 electrons."},
@@ -125,7 +124,7 @@ const QB = [
 {id:"c139",s:"Chemistry",y:2010,t:"Acids and Bases",d:"Medium",q:"Which of the following is a strong acid?",o:{A:"CH₃COOH",B:"H₂CO₃",C:"HNO₃",D:"H₃PO₄"},a:"C",e:"HNO₃ (nitric acid) is a strong acid."},
 {id:"c140",s:"Chemistry",y:2010,t:"Acids and Bases",d:"Medium",q:"The conjugate base of H₂O is",o:{A:"H₃O⁺",B:"OH⁻",C:"H₂O",D:"O²⁻"},a:"B",e:"H₂O → OH⁻ + H⁺; OH⁻ is the conjugate base."},
 
-// YEAR 2011 (c141 to c180)
+
 {id:"c141",s:"Chemistry",y:2011,t:"Atomic Structure",d:"Easy",q:"The nucleus of an atom contains",o:{A:"Protons and electrons",B:"Neutrons and electrons",C:"Protons and neutrons",D:"Protons, neutrons, and electrons"},a:"C",e:"The nucleus contains protons and neutrons; electrons orbit the nucleus."},
 {id:"c142",s:"Chemistry",y:2011,t:"Atomic Structure",d:"Easy",q:"The atomic number of an element is the number of",o:{A:"Neutrons",B:"Protons",C:"Electrons in the outer shell",D:"Nucleons"},a:"B",e:"Atomic number = number of protons."},
 {id:"c143",s:"Chemistry",y:2011,t:"Atomic Structure",d:"Medium",q:"The electronic configuration of calcium (Z=20) is",o:{A:"2,8,8,2",B:"2,8,9,1",C:"2,8,10",D:"2,8,8,1"},a:"A",e:"Ca: 1s²2s²2p⁶3s²3p⁶4s² → 2,8,8,2."},
@@ -167,7 +166,7 @@ const QB = [
 {id:"c179",s:"Chemistry",y:2011,t:"Acids and Bases",d:"Medium",q:"Which of the following is a weak acid?",o:{A:"HCl",B:"HNO₃",C:"H₂SO₄",D:"CH₃COOH"},a:"D",e:"Acetic acid (CH₃COOH) is a weak acid."},
 {id:"c180",s:"Chemistry",y:2011,t:"Acids and Bases",d:"Medium",q:"The conjugate acid of NH₃ is",o:{A:"NH₂⁻",B:"NH₄⁺",C:"N³⁻",D:"NH"},a:"B",e:"NH₃ + H⁺ → NH₄⁺; NH₄⁺ is the conjugate acid."},
 
-// YEAR 2012 (c181 to c220)
+
 {id:"c181",s:"Chemistry",y:2012,t:"Atomic Structure",d:"Easy",q:"The mass number of an atom is the number of",o:{A:"Protons",B:"Neutrons",C:"Protons + neutrons",D:"Protons + electrons"},a:"C",e:"Mass number (A) = number of protons + neutrons."},
 {id:"c182",s:"Chemistry",y:2012,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of oxygen (Z=8) is",o:{A:"2,6",B:"2,8",C:"2,4",D:"2,5"},a:"A",e:"O: 1s²2s²2p⁴ → 2,6."},
 {id:"c183",s:"Chemistry",y:2012,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the M shell of argon (Z=18) is",o:{A:"2",B:"8",C:"18",D:"8"},a:"B",e:"Ar: 2,8,8; M shell has 8 electrons."},
@@ -209,7 +208,7 @@ const QB = [
 {id:"c219",s:"Chemistry",y:2012,t:"Acids and Bases",d:"Medium",q:"Which of the following is a strong base?",o:{A:"NH₃",B:"NaOH",C:"Ca(OH)₂",D:"Al(OH)₃"},a:"B",e:"NaOH is a strong base (fully dissociates)."},
 {id:"c220",s:"Chemistry",y:2012,t:"Acids and Bases",d:"Medium",q:"The conjugate base of H₂SO₄ is",o:{A:"HSO₄⁻",B:"SO₄²⁻",C:"H₂SO₃",D:"H₃O⁺"},a:"A",e:"H₂SO₄ → H⁺ + HSO₄⁻; HSO₄⁻ is the conjugate base."},
 
-// YEAR 2013 (c221 to c260)
+
 {id:"c221",s:"Chemistry",y:2013,t:"Atomic Structure",d:"Easy",q:"The number of neutrons in an atom of ²³⁵U (Z=92) is",o:{A:"92",B:"143",C:"235",D:"327"},a:"B",e:"Neutrons = mass number - atomic number = 235 - 92 = 143."},
 {id:"c222",s:"Chemistry",y:2013,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of chlorine (Z=17) is",o:{A:"2,8,7",B:"2,8,8",C:"2,8,6",D:"2,8,5"},a:"A",e:"Cl: 1s²2s²2p⁶3s²3p⁵ → 2,8,7."},
 {id:"c223",s:"Chemistry",y:2013,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the N shell of cesium (Z=55) is",o:{A:"8",B:"18",C:"32",D:"2"},a:"B",e:"Cs: [Xe]6s¹; N shell (n=4) contains 18 electrons."},
@@ -251,7 +250,7 @@ const QB = [
 {id:"c259",s:"Chemistry",y:2013,t:"Acids and Bases",d:"Medium",q:"Which of the following is a weak base?",o:{A:"NaOH",B:"KOH",C:"NH₃",D:"Ca(OH)₂"},a:"C",e:"Ammonia (NH₃) is a weak base."},
 {id:"c260",s:"Chemistry",y:2013,t:"Acids and Bases",d:"Medium",q:"The conjugate acid of OH⁻ is",o:{A:"H₂O",B:"O²⁻",C:"H₃O⁺",D:"H₂O₂"},a:"A",e:"OH⁻ + H⁺ → H₂O; H₂O is the conjugate acid."},
 
-// YEAR 2014 (c261 to c300)
+
 {id:"c261",s:"Chemistry",y:2014,t:"Atomic Structure",d:"Easy",q:"The number of protons in an atom of ⁴⁰Ca (Z=20) is",o:{A:"20",B:"40",C:"60",D:"80"},a:"A",e:"Atomic number = number of protons = 20."},
 {id:"c262",s:"Chemistry",y:2014,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of sodium (Z=11) is",o:{A:"2,8,1",B:"2,8,2",C:"2,8,3",D:"2,8,4"},a:"A",e:"Na: 1s²2s²2p⁶3s¹ → 2,8,1."},
 {id:"c263",s:"Chemistry",y:2014,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the L shell of argon (Z=18) is",o:{A:"2",B:"8",C:"8",D:"18"},a:"B",e:"Ar: 2,8,8; L shell has 8 electrons."},
@@ -293,7 +292,7 @@ const QB = [
 {id:"c299",s:"Chemistry",y:2014,t:"Acids and Bases",d:"Medium",q:"Which of the following is a strong acid?",o:{A:"HF",B:"HCN",C:"H₂S",D:"HCl"},a:"D",e:"HCl is a strong acid."},
 {id:"c300",s:"Chemistry",y:2014,t:"Acids and Bases",d:"Medium",q:"The conjugate base of HCO₃⁻ is",o:{A:"CO₃²⁻",B:"H₂CO₃",C:"CO₂",D:"H₃O⁺"},a:"A",e:"HCO₃⁻ → H⁺ + CO₃²⁻; CO₃²⁻ is the conjugate base."},
 
-// YEAR 2015 (c301 to c340)
+
 {id:"c301",s:"Chemistry",y:2015,t:"Atomic Structure",d:"Easy",q:"The number of neutrons in an atom of ²³Na (Z=11) is",o:{A:"11",B:"12",C:"23",D:"34"},a:"B",e:"Neutrons = 23 - 11 = 12."},
 {id:"c302",s:"Chemistry",y:2015,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of magnesium (Z=12) is",o:{A:"2,8,2",B:"2,8,1",C:"2,8,3",D:"2,8,4"},a:"A",e:"Mg: 1s²2s²2p⁶3s² → 2,8,2."},
 {id:"c303",s:"Chemistry",y:2015,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the M shell of potassium (Z=19) is",o:{A:"8",B:"9",C:"10",D:"18"},a:"A",e:"K: 2,8,8,1; M shell (n=3) has 8 electrons."},
@@ -335,7 +334,7 @@ const QB = [
 {id:"c339",s:"Chemistry",y:2015,t:"Acids and Bases",d:"Medium",q:"Which of the following is a weak acid?",o:{A:"H₂SO₄",B:"HNO₃",C:"CH₃COOH",D:"HCl"},a:"C",e:"Acetic acid (CH₃COOH) is a weak acid."},
 {id:"c340",s:"Chemistry",y:2015,t:"Acids and Bases",d:"Medium",q:"The conjugate base of H₂O is",o:{A:"H₃O⁺",B:"OH⁻",C:"O²⁻",D:"H₂O"},a:"B",e:"H₂O → H⁺ + OH⁻; OH⁻ is the conjugate base."},
 
-// YEAR 2016 (c341 to c380)
+
 {id:"c341",s:"Chemistry",y:2016,t:"Atomic Structure",d:"Easy",q:"The number of protons in an atom of ⁷⁵As (Z=33) is",o:{A:"33",B:"42",C:"75",D:"108"},a:"A",e:"Atomic number = number of protons = 33."},
 {id:"c342",s:"Chemistry",y:2016,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of aluminium (Z=13) is",o:{A:"2,8,3",B:"2,8,2",C:"2,8,4",D:"2,8,5"},a:"A",e:"Al: 1s²2s²2p⁶3s²3p¹ → 2,8,3."},
 {id:"c343",s:"Chemistry",y:2016,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the N shell of rubidium (Z=37) is",o:{A:"8",B:"18",C:"32",D:"1"},a:"B",e:"Rb: [Kr]5s¹; N shell (n=4) has 18 electrons."},
@@ -377,7 +376,7 @@ const QB = [
 {id:"c379",s:"Chemistry",y:2016,t:"Acids and Bases",d:"Medium",q:"Which of the following is a strong base?",o:{A:"NH₃",B:"KOH",C:"Al(OH)₃",D:"Fe(OH)₂"},a:"B",e:"KOH is a strong base."},
 {id:"c380",s:"Chemistry",y:2016,t:"Acids and Bases",d:"Medium",q:"The conjugate acid of NH₃ is",o:{A:"NH₂⁻",B:"NH₄⁺",C:"N³⁻",D:"NH"},a:"B",e:"NH₃ + H⁺ → NH₄⁺; NH₄⁺ is the conjugate acid."},
 
-// YEAR 2017 (c381 to c420)
+
 {id:"c381",s:"Chemistry",y:2017,t:"Atomic Structure",d:"Easy",q:"The number of neutrons in an atom of ⁶⁵Cu (Z=29) is",o:{A:"29",B:"36",C:"65",D:"94"},a:"B",e:"Neutrons = 65 - 29 = 36."},
 {id:"c382",s:"Chemistry",y:2017,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of silicon (Z=14) is",o:{A:"2,8,4",B:"2,8,2",C:"2,8,3",D:"2,8,5"},a:"A",e:"Si: 1s²2s²2p⁶3s²3p² → 2,8,4."},
 {id:"c383",s:"Chemistry",y:2017,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the M shell of bromine (Z=35) is",o:{A:"8",B:"18",C:"32",D:"7"},a:"B",e:"Br: [Ar]4s²3d¹⁰4p⁵; M shell (n=3) has 18 electrons."},
@@ -419,7 +418,7 @@ const QB = [
 {id:"c419",s:"Chemistry",y:2017,t:"Acids and Bases",d:"Medium",q:"Which of the following is a weak base?",o:{A:"NaOH",B:"KOH",C:"Ca(OH)₂",D:"NH₃"},a:"D",e:"Ammonia (NH₃) is a weak base."},
 {id:"c420",s:"Chemistry",y:2017,t:"Acids and Bases",d:"Medium",q:"The conjugate base of HSO₄⁻ is",o:{A:"H₂SO₄",B:"SO₄²⁻",C:"H₂SO₃",D:"SO₃²⁻"},a:"B",e:"HSO₄⁻ → H⁺ + SO₄²⁻; SO₄²⁻ is the conjugate base."},
 
-// YEAR 2018 (c421 to c460)
+
 {id:"c421",s:"Chemistry",y:2018,t:"Atomic Structure",d:"Easy",q:"The number of protons in an atom of ⁸⁰Br (Z=35) is",o:{A:"35",B:"45",C:"80",D:"115"},a:"A",e:"Atomic number = number of protons = 35."},
 {id:"c422",s:"Chemistry",y:2018,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of phosphorus (Z=15) is",o:{A:"2,8,5",B:"2,8,4",C:"2,8,6",D:"2,8,7"},a:"A",e:"P: 1s²2s²2p⁶3s²3p³ → 2,8,5."},
 {id:"c423",s:"Chemistry",y:2018,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the N shell of strontium (Z=38) is",o:{A:"8",B:"18",C:"32",D:"2"},a:"B",e:"Sr: [Kr]5s²; N shell (n=4) has 18 electrons."},
@@ -503,7 +502,7 @@ const QB = [
 {id:"c499",s:"Chemistry",y:2019,t:"Acids and Bases",d:"Medium",q:"Which of the following is a weak acid?",o:{A:"H₂SO₄",B:"HNO₃",C:"CH₃COOH",D:"HCl"},a:"C",e:"Acetic acid (CH₃COOH) is a weak acid."},
 {id:"c500",s:"Chemistry",y:2019,t:"Acids and Bases",d:"Medium",q:"The conjugate base of H₂O is",o:{A:"H₃O⁺",B:"OH⁻",C:"O²⁻",D:"H₂O"},a:"B",e:"H₂O → H⁺ + OH⁻; OH⁻ is the conjugate base."},
 
-// YEAR 2020 (c501 to c540)
+
 {id:"c501",s:"Chemistry",y:2020,t:"Atomic Structure",d:"Easy",q:"The number of protons in an atom of ²³⁵U (Z=92) is",o:{A:"92",B:"143",C:"235",D:"327"},a:"A",e:"Atomic number = number of protons = 92."},
 {id:"c502",s:"Chemistry",y:2020,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of argon (Z=18) is",o:{A:"2,8,8",B:"2,8,7",C:"2,8,6",D:"2,8,5"},a:"A",e:"Ar: 1s²2s²2p⁶3s²3p⁶ → 2,8,8."},
 {id:"c503",s:"Chemistry",y:2020,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the M shell of krypton (Z=36) is",o:{A:"8",B:"18",C:"32",D:"8"},a:"B",e:"Kr: [Ar]4s²3d¹⁰4p⁶; M shell (n=3) has 18 electrons."},
@@ -545,7 +544,7 @@ const QB = [
 {id:"c539",s:"Chemistry",y:2020,t:"Acids and Bases",d:"Medium",q:"Which of the following is a strong base?",o:{A:"NH₃",B:"KOH",C:"Al(OH)₃",D:"Fe(OH)₂"},a:"B",e:"KOH is a strong base."},
 {id:"c540",s:"Chemistry",y:2020,t:"Acids and Bases",d:"Medium",q:"The conjugate acid of NH₃ is",o:{A:"NH₂⁻",B:"NH₄⁺",C:"N³⁻",D:"NH"},a:"B",e:"NH₃ + H⁺ → NH₄⁺; NH₄⁺ is the conjugate acid."},
 
-// YEAR 2021 (c541 to c580)
+
 {id:"c541",s:"Chemistry",y:2021,t:"Atomic Structure",d:"Easy",q:"The number of neutrons in an atom of ⁶⁵Cu (Z=29) is",o:{A:"29",B:"36",C:"65",D:"94"},a:"B",e:"Neutrons = 65 - 29 = 36."},
 {id:"c542",s:"Chemistry",y:2021,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of silicon (Z=14) is",o:{A:"2,8,4",B:"2,8,2",C:"2,8,3",D:"2,8,5"},a:"A",e:"Si: 1s²2s²2p⁶3s²3p² → 2,8,4."},
 {id:"c543",s:"Chemistry",y:2021,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the M shell of bromine (Z=35) is",o:{A:"8",B:"18",C:"32",D:"7"},a:"B",e:"Br: [Ar]4s²3d¹⁰4p⁵; M shell (n=3) has 18 electrons."},
@@ -587,7 +586,7 @@ const QB = [
 {id:"c579",s:"Chemistry",y:2021,t:"Acids and Bases",d:"Medium",q:"Which of the following is a weak base?",o:{A:"NaOH",B:"KOH",C:"Ca(OH)₂",D:"NH₃"},a:"D",e:"Ammonia (NH₃) is a weak base."},
 {id:"c580",s:"Chemistry",y:2021,t:"Acids and Bases",d:"Medium",q:"The conjugate base of HSO₄⁻ is",o:{A:"H₂SO₄",B:"SO₄²⁻",C:"H₂SO₃",D:"SO₃²⁻"},a:"B",e:"HSO₄⁻ → H⁺ + SO₄²⁻; SO₄²⁻ is the conjugate base."},
 
-// YEAR 2022 (c581 to c620)
+
 {id:"c581",s:"Chemistry",y:2022,t:"Atomic Structure",d:"Easy",q:"The number of protons in an atom of ⁸⁰Br (Z=35) is",o:{A:"35",B:"45",C:"80",D:"115"},a:"A",e:"Atomic number = number of protons = 35."},
 {id:"c582",s:"Chemistry",y:2022,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of phosphorus (Z=15) is",o:{A:"2,8,5",B:"2,8,4",C:"2,8,6",D:"2,8,7"},a:"A",e:"P: 1s²2s²2p⁶3s²3p³ → 2,8,5."},
 {id:"c583",s:"Chemistry",y:2022,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the N shell of strontium (Z=38) is",o:{A:"8",B:"18",C:"32",D:"2"},a:"B",e:"Sr: [Kr]5s²; N shell (n=4) has 18 electrons."},
@@ -629,7 +628,7 @@ const QB = [
 {id:"c619",s:"Chemistry",y:2022,t:"Acids and Bases",d:"Medium",q:"Which of the following is a strong acid?",o:{A:"HF",B:"HCN",C:"H₂S",D:"HCl"},a:"D",e:"HCl is a strong acid."},
 {id:"c620",s:"Chemistry",y:2022,t:"Acids and Bases",d:"Medium",q:"The conjugate base of HCO₃⁻ is",o:{A:"CO₃²⁻",B:"H₂CO₃",C:"CO₂",D:"H₃O⁺"},a:"A",e:"HCO₃⁻ → H⁺ + CO₃²⁻; CO₃²⁻ is the conjugate base."},
 
-// YEAR 2023 (c621 to c660)
+
 {id:"c621",s:"Chemistry",y:2023,t:"Atomic Structure",d:"Easy",q:"The number of neutrons in an atom of ⁵⁵Mn (Z=25) is",o:{A:"25",B:"30",C:"55",D:"80"},a:"B",e:"Neutrons = 55 - 25 = 30."},
 {id:"c622",s:"Chemistry",y:2023,t:"Atomic Structure",d:"Easy",q:"The electronic configuration of sulfur (Z=16) is",o:{A:"2,8,6",B:"2,8,5",C:"2,8,7",D:"2,8,8"},a:"A",e:"S: 1s²2s²2p⁶3s²3p⁴ → 2,8,6."},
 {id:"c623",s:"Chemistry",y:2023,t:"Atomic Structure",d:"Medium",q:"The number of electrons in the M shell of zinc (Z=30) is",o:{A:"8",B:"18",C:"32",D:"2"},a:"B",e:"Zn: [Ar]4s²3d¹⁰; M shell (n=3) has 18 electrons."},
@@ -5390,10 +5389,10 @@ const QB = [
   {id:"e960",s:"Use of English",y:2025,t:"Register",d:"Medium",q:"The phrase 'utilise' is more formal than",o:{A:"Employ",B:"Apply",C:"Use",D:"Exercise"},a:"C",e:"'Utilise' is formal; 'use' is its everyday equivalent."}
 ];
 
-// ─── STORAGE ──────────────────────────────────────────────────────────────────
+
 const initStore = () => ({ sessions:[], subjectStats:{}, topicStats:{}, totalQ:0, totalC:0, userName:"" });
 
-// JAMB 2026 exam week — hardcoded
+
 const JAMB_DATE = new Date("2026-04-19");
 
 // Dual-layer storage: Capacitor Preferences (native, survives reinstalls) + localStorage fallback
@@ -5474,7 +5473,7 @@ async function recordSession(session){
   await saveStore(s); return s;
 }
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
+
 function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
 function fmtDate(iso){ try{return new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});}catch{return "";} }
 function fmtSecs(s){ const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60; if(h>0)return`${h}:${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; return`${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; }
@@ -5566,7 +5565,7 @@ function I({n,sz=20,c="currentColor"}){
   return icons[n]||null;
 }
 
-// ─── CSS ──────────────────────────────────────────────────────────────────────
+
 const CSS = `@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
